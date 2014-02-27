@@ -1,0 +1,35 @@
+
+.container {
+    width: 1420px;
+    height: 800px;
+    background-color: #EEE;
+
+    > div {
+        float: left;
+        border: solid 1px #000
+    }
+
+    .box-1-1 {
+        width: 200px;
+        height: 200px;
+        background-color: blue;
+    }
+
+    .box-2-1 {
+        width: 400px;
+        height: 200px;
+        background-color: green;
+    }
+
+    .box-1-2 {
+        width: 200px;
+        height: 400px;
+        background-color: yellow;
+    }
+
+    .box-2-2 {
+        width: 400px;
+        height: 400px;
+        background-color: red;
+    }
+}

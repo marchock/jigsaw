@@ -1,0 +1,29 @@
+/* line 2, ../scss/app.scss */
+.container {
+  width: 1420px;
+  height: 800px;
+  background-color: #EEE; }
+  /* line 7, ../scss/app.scss */
+  .container > div {
+    float: left;
+    border: solid 1px black; }
+  /* line 12, ../scss/app.scss */
+  .container .box-1-1 {
+    width: 200px;
+    height: 200px;
+    background-color: blue; }
+  /* line 18, ../scss/app.scss */
+  .container .box-2-1 {
+    width: 400px;
+    height: 200px;
+    background-color: green; }
+  /* line 24, ../scss/app.scss */
+  .container .box-1-2 {
+    width: 200px;
+    height: 400px;
+    background-color: yellow; }
+  /* line 30, ../scss/app.scss */
+  .container .box-2-2 {
+    width: 400px;
+    height: 400px;
+    background-color: red; }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+	<meta charset="UTF-8">
+	<title>JIGSAW</title>
+
+	<link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+	<link href="css/print.css" media="print" rel="stylesheet" type="text/css" />
+	<link href="css/app.css" rel="stylesheet" type="text/css" />
+	<!--[if IE]>
+	  <link href="/stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+	<![endif]-->
+
+
+	</head>
+
+	<script>
+
+	function setup() {
+
+		var pw = 1400;
+
+
+		var tile = {
+			w: 200,
+			h: 200
+		}
+
+
+
+	};
+
+	function tile (w, h) {
+		return {
+			w: w * 200,
+			h: h * 200,
+			x: 0,
+			y: 0,
+			className: "box-" + w + "-" + h
+		}
+	}
+
+
+	window.onload = function () {
+        var numOfImages = 20;
+        var pw = 1420;
+        var cols = Math.round(pw / 200);
+        var numOfTiles = 0;
+        var rows = 0
+
+
+
+
+		var i = 0;
+		var numOfGridBlocks
+		
+		
+		var tiles = [];
+        var x, y; 
+
+        for (i=0; i < numOfImages; i += 1) {
+            x = getNum();
+            y = getNum();
+            tiles[i] = tile(x, y);
+
+            numOfTiles += (x * y)
+        }
+
+        rows = Math.round(numOfTiles / cols);
+
+
+
+        console.log("COLS", cols, 
+                    "ROWS: ", rows, 
+                    "NUM OF TILES", numOfTiles)
+
+
+        var grid  = [];
+
+		for (i=0; i < rows; i += 1) {
+			grid[i] = setArrayLength(cols)
+		}
+
+        console.log(grid);
+
+
+
+
+
+
+        var ii = 0
+        for (i=0; i < numOfTiles; i += 1) {
+            
+
+
+
+            grid[i][ii] = 1;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+	}
+
+    function setArrayLength (c) {
+        var a = [];
+        for (i=0; i < c; i += 1) {
+            a[i] = 0;
+        }
+         return a
+    }
+
+
+
+	function getNum () {
+		return Math.floor((Math.random()*2)+1);
+	}
+
+
+	function createTile () {
+		var c = document.querySelector(".container");
+		var e = document.createElement("div")
+		e.setAttribute("class", "box-" + getNum() + "-" + getNum())
+		c.appendChild(e);
+	};
+
+
+
+	</script>
+
+	<body>
+		<div class="container">
+
+<!-- 			<div class="box-1-1"></div>
+			<div class="box-1-2"></div>
+			<div class="box-2-2"></div>
+			<div class="box-2-1"></div>
+			<div class="box-1-1"></div>
+			<div class="box-2-1"></div>
+			<div class="box-1-1"></div> -->
+
+
+		</div>
+	</body>
+
+</html>
