@@ -6,23 +6,24 @@
   /* line 7, ../scss/app.scss */
   .container > div {
     float: left;
-    border: solid 1px black; }
-  /* line 12, ../scss/app.scss */
+    border: solid 1px #000;
+    position: absolute; }
+  /* line 13, ../scss/app.scss */
   .container .box-1-1 {
     width: 200px;
     height: 200px;
     background-color: blue; }
-  /* line 18, ../scss/app.scss */
+  /* line 19, ../scss/app.scss */
   .container .box-2-1 {
     width: 400px;
     height: 200px;
     background-color: green; }
-  /* line 24, ../scss/app.scss */
+  /* line 25, ../scss/app.scss */
   .container .box-1-2 {
     width: 200px;
     height: 400px;
     background-color: yellow; }
-  /* line 30, ../scss/app.scss */
+  /* line 31, ../scss/app.scss */
   .container .box-2-2 {
     width: 400px;
     height: 400px;

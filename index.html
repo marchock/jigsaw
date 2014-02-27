@@ -33,14 +33,17 @@
 
 	function tile (w, h) {
 		return {
-			w: w * 200,
-			h: h * 200,
+			w: w,
+			h: h,
 			x: 0,
 			y: 0,
 			className: "box-" + w + "-" + h
 		}
 	}
 
+
+
+var tiles = [];
 
 	window.onload = function () {
         var numOfImages = 20;
@@ -56,7 +59,7 @@
 		var numOfGridBlocks
 		
 		
-		var tiles = [];
+
         var x, y; 
 
         for (i=0; i < numOfImages; i += 1) {
@@ -76,40 +79,96 @@
                     "NUM OF TILES", numOfTiles)
 
 
-        var grid  = [];
 
+        var grid  = [];
 		for (i=0; i < rows; i += 1) {
 			grid[i] = setArrayLength(cols)
 		}
 
-        console.log(grid);
+        
+        var acC = 0,
+        	acR = 0,
+        	tc = 0,
+        	addTile;
 
 
-
-
-
-
-        var ii = 0
+        /*
+		 * Set-up grid array
+         */
         for (i=0; i < numOfTiles; i += 1) {
             
 
+        	if (!grid[acR][acC]) {
+
+				console.log("COUNTER:", acR, acC)
+				addTile = true;
 
 
-            grid[i][ii] = 1;
+        		
+        		// tile width 
+        		if (tiles[tc].w === 2) {
+        			if (!grid[acR][acC+1] && (acC+1) < cols) {
+						grid[acR][acC+1] = 1;
+        			} else {
+        				addTile = false;
+        			}
+        			
+        		}
 
+        		// tile height 
+        		if (tiles[tc].h === 2) {
+        			if (!grid[acR+1][acC]) {
+						grid[acR+1][acC] = 1;
+        			} else {
+        				addTile = false;
+        			}
+        		}
+
+
+        		// tile width & height
+        		if (tiles[tc].h === 2 && tiles[tc].w === 2) {
+
+        			if (!grid[acR+1][acC+1]) {
+						grid[acR+1][acC+1] = 1;
+        			} else {
+        				addTile = false;
+        			}
+        		}
+
+
+
+        		if (addTile) {
+	        		if (tiles[tc].className) {
+	        			createTile(tiles[tc].className, acC, acR);
+	        			tc += 1;
+	        		}
+        		}
+
+
+
+
+        		tc += 1;
+        		grid[acR][acC] = 1;
+        	}
+
+
+
+
+
+
+
+			if (acC < cols-1) {
+				acC += 1;
+
+			} else {
+				acC = 0;
+				acR += 1;
+			}
         }
 
-
-
-
-
-
-
-
-
-
-
+        console.log(grid)
 	}
+
 
     function setArrayLength (c) {
         var a = [];
@@ -126,10 +185,13 @@
 	}
 
 
-	function createTile () {
+
+	function createTile (cn, l, t) {
 		var c = document.querySelector(".container");
-		var e = document.createElement("div")
-		e.setAttribute("class", "box-" + getNum() + "-" + getNum())
+		var e = document.createElement("div");
+
+		e.setAttribute("class", cn);
+		e.setAttribute("style", "top: " + (t*200) + "px; left: " + (l*200) + "px;");
 		c.appendChild(e);
 	};
 
