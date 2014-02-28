@@ -1,36 +1,45 @@
+$tile-1: 190px;
+$tile-2: 390px;
+
+
 
 .container {
-    width: 1420px;
-    height: 800px;
+    width: 1400px;
+    height: 100%;
     background-color: #EEE;
+    margin: auto;
+    position: relative;
 
     > div {
         float: left;
-        border: solid 1px #000;
         position: absolute;
+        > img {
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .box-1-1 {
-        width: 200px;
-        height: 200px;
+        width: $tile-1;
+        height: $tile-1;
         background-color: blue;
     }
 
     .box-2-1 {
-        width: 400px;
-        height: 200px;
+        width: $tile-2;
+        height: $tile-1;
         background-color: green;
     }
 
     .box-1-2 {
-        width: 200px;
-        height: 400px;
+        width: $tile-1;
+        height: $tile-2;
         background-color: yellow;
     }
 
     .box-2-2 {
-        width: 400px;
-        height: 400px;
+        width: $tile-2;
+        height: $tile-2;
         background-color: red;
     }
 }
