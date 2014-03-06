@@ -1,35 +1,33 @@
 /* line 6, ../scss/app.scss */
 .container {
   width: 1400px;
-  height: 100%;
+  height: inherit;
   background-color: #EEE;
   margin: auto;
   position: relative; }
   /* line 13, ../scss/app.scss */
   .container > div {
     float: left;
-    position: absolute; }
-    /* line 16, ../scss/app.scss */
+    position: absolute;
+    font-size: 60px;
+    font-family: arial; }
+    /* line 18, ../scss/app.scss */
     .container > div > img {
       width: 100%;
       height: 100%; }
-  /* line 22, ../scss/app.scss */
+  /* line 24, ../scss/app.scss */
   .container .box-1-1 {
-    width: 190px;
-    height: 190px;
     background-color: blue; }
-  /* line 28, ../scss/app.scss */
+  /* line 30, ../scss/app.scss */
   .container .box-2-1 {
-    width: 390px;
-    height: 190px;
     background-color: green; }
-  /* line 34, ../scss/app.scss */
+  /* line 36, ../scss/app.scss */
   .container .box-1-2 {
-    width: 190px;
-    height: 390px;
     background-color: yellow; }
-  /* line 40, ../scss/app.scss */
+  /* line 42, ../scss/app.scss */
   .container .box-2-2 {
-    width: 390px;
-    height: 390px;
     background-color: red; }
+
+/* line 49, ../scss/app.scss */
+.load-more {
+  text-align: center; }

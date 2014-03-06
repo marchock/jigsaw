@@ -12,404 +12,48 @@
 	  <link href="/stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
-
 	</head>
-
-	<script>
-
-
-var testData = [
-    { x: 1, y: 1}, 
-    { x: 2, y: 1},
-    { x: 2, y: 1},
-    { x: 2, y: 1},
-    { x: 1, y: 1},
-    { x: 2, y: 2},
-    { x: 1, y: 2},
-    { x: 2, y: 1},
-    { x: 1, y: 2},
-    { x: 1, y: 2},
-    { x: 2, y: 1},
-    { x: 1, y: 2},
-    { x: 1, y: 2},
-    { x: 2, y: 2},
-    { x: 2, y: 2},
-    { x: 1, y: 2},
-    { x: 2, y: 1}
-]
-
-
-
-
-	function tile (w, h) {
-		return {
-			w: w,
-			h: h,
-			className: "box-" + w + "-" + h,
-            created: false
-		}
-	};
-
-
-
-
-var tiles = [];
-
-	window.onload = function () {
-        var numOfImages = 20;
-        var pw = 1400;
-        var tileWidth = 200;
-        var spacing = 20;
-        var cols = Math.round(pw / tileWidth);
-        var numOfTiles = 0;
-        var rows = 0
-
-
-
-
-		var i = 0;
-		var numOfGridBlocks
-		
-		
-
-        var x, y; 
-
-        for (i=0; i < numOfImages; i += 1) {
-            x = getNum();
-            y = getNum();
-
-            // console.log(testData.length)
-            // x = testData[i].x;
-            // y = testData[i].y;
-
-
-            tiles[i] = tile(x, y);
-
-            numOfTiles += (x * y)
-        }
-
-        console.log("TILES: ", tiles)
-
-        rows = Math.round(numOfTiles / cols);
-
-
-
-        console.log("COLS", cols, 
-                    "ROWS: ", rows, 
-                    "NUM OF TILES", numOfTiles)
-
-
-
-        var grid  = [];
-		for (i=0; i < rows+5; i += 1) {
-			grid[i] = setArrayLength(cols)
-		}
-
-		console.log("GRID - ", grid)
-
-        
-        var acC = 0,
-        	acR = 0,
-        	tc = 0,
-        	addTile;
-
-
-
-	   var space = [];
-
-
-        /*
-		 * Set-up grid array
-         */
-        for (i=0; i < numOfTiles; i += 1) {
-
-            console.log(i)
-            console.log(grid[0])
-            console.log(grid[1])
-            console.log(grid[2])
-            console.log(grid[3])
-            console.log(grid[4])
-            console.log(grid[5])
-            console.log("-----------------------------------------------")
-
-
-            
-            addTile = true;
-
-        	if (!grid[acR][acC]) {
-
-
-
-                // if tile width and height is 2 tiles wide
-                if (tiles[tc].h === 2 && tiles[tc].w === 2) {
-
-                    if (!grid[acR + 1][acC + 1] && 
-                        !grid[acR][acC + 1] &&
-                        !grid[acR + 1][acC] &&
-                        (acC + 1) < cols) {
-
-                        console.log("2X2: ",  + grid[acR+1][acC+1], grid[acR], grid[acR+1])
-
-                        grid[acR+1][acC+1] = 1;
-                        grid[acR+1][acC] = 1;
-                        grid[acR][acC+1] = 1;
-                        grid[acR][acC] = 1;
-
-                    } else {
-
-                        addTile = false;
-                        //console.log("TILE DOES NOT FIT -  WIDTH & HEIGHT", tc, tiles[tc])
-
-
-
-
-                        // find a tile to fit
-                        var c = tc;
-                        for (c = c; c < tiles.length; c += 1) {
-
-
-
-                           // console.log("NEXT TILE +++++++++", c, tiles[c].w, tiles[tc].created)
-
-
-                            if (tiles[c].w === 1 && !tiles[tc].created) {
-                                
-                                createTile(tiles[c].className, acC, acR, tiles[c]);
-                                tiles[c].created = true;
-                                grid[acR][acC] = 1;
-
-
-
-                                console.log("NEXT TILE", c, tiles[c].h)
-
-
-                                if (tiles[c].h === 2) {
-                                    grid[acR + 1][acC] = 1;
-                                }
-
-                                //console.log("CREATE TILE: +++++++ : " ,acC, acR, tiles[c].className)
-
-                                break;
-                            }
-                        }
-                    }
-
-
-
-                } else if (tiles[tc].w === 2) {
-
-        			// if grid position is false and if current column position is less then max col width
-        			if (!grid[acR][acC+1] && (acC+1) < cols) {
-
-        				// mark grid positioned as filled
-        				grid[acR][acC] = 1;
-						grid[acR][acC+1] = 1;
-        			} else {
-
-        				// two tile wide cannot fit 
-        				addTile = false;
-        				grid[acR][acC] = 0;
-
-        				//console.log("TILE DOES NOT FIT -  WIDTH", tc, tiles[tc])
-
-
-                        // find a tile to fit
-                        var c = tc;
-                        for (c = c; c < tiles.length; c += 1) {
-
-
-
-                            //console.log("NEXT TILE +++++++++", c, tiles[c].w, tiles[tc].created)
-
-
-                            if (tiles[c].w === 1 && !tiles[tc].created) {
-                                console.log("NEXT TILE", c)
-
-
-                                createTile(tiles[c].className, acC, acR, tiles[c]);
-                                tiles[c].created = true;
-                                grid[acR][acC] = 1;
-
-                                if (tiles[c].h === 2) {
-                                    grid[acR + 1][acC] = 1;
-                                }
-
-                                //console.log("CREATE TILE: +++++++ : " ,acC, acR, tiles[c].className)
-
-                                break;
-                            }
-                        }
-
-
-        			}
-
-
-
-        		} else if (tiles[tc].h === 2) {
-
-                    //console.log("acr", acR)
-
-        			if (!grid[acR+1][acC] && (acR+1) < rows) {
-
-        				grid[acR][acC] = 1;
-						grid[acR+1][acC] = 1;
-
-        			} else {
-
-        				addTile = false;
-        				//console.log("TILE DOES NOT FIT -  HEIGHT", tc, tiles[tc]);
-
-
-
-                        // find a tile to fit
-                        var c = tc;
-                        for (c = c; c < tiles.length; c += 1) {
-
-
-
-                            //console.log("NEXT TILE +++++++++", c, tiles[c].w, tiles[tc].created)
-
-
-                            if (tiles[c].w === 1 && !tiles[tc].created) {
-                                console.log("NEXT TILE", c)
-
-
-                                createTile(tiles[c].className, acC, acR, tiles[c]);
-                                tiles[c].created = true;
-                                grid[acR][acC] = 1;
-
-                                if (tiles[c].h === 2) {
-                                    grid[acR + 1][acC] = 1;
-                                }
-                                //console.log("CREATE TILE: +++++++ : " ,acC, acR, tiles[c].className)
-
-                                break;
-                            }
-                        }
-
-
-        			}
-
-        		} else {
-                    grid[acR][acC] = 1;
-                }
-
-
-
-
-
-
-        		if (addTile) {
-	        		if (tiles[tc].className) {
-                        createTile(tiles[tc].className, acC, acR, tiles[tc]);
-                        tiles[tc].created = true;
-
-
-                        //console.log("CREATE TILE: +++++++ : " ,acC, acR, tiles[tc].className)
-
-                        tc += 1;
-	        		}
-                }
-            }
-
-
-
-
-
-
-
-			if (acC < cols-1) {
-				acC += 1;
-
-			} else {
-				acC = 0;
-				acR += 1;
-			}
-
-            //console.log("COUNTER COL: ", acC, " --- COUNTER ROW: ", acR, "  ", grid[acR][acC]);
-
-        }
-
-        console.log(grid)
-	};
-
-
-    function setArrayLength (c) {
-        var a = [];
-        for (i=0; i < c; i += 1) {
-            a[i] = 0;
-        }
-         return a
-    }
-
-
-
-	function getNum () {
-		return Math.floor((Math.random()*2)+1);
-	}
-
-
-
-	function createTile (cn, l, t, size) {
-		var c = document.querySelector(".container");
-		var e = document.createElement("div");
-        var i = document.createElement("img");
-
-		e.setAttribute("class", cn);
-		e.setAttribute("style", "top: " + (t * 200) + "px; left: " + (l * 200) + "px;");
-
-
-        var h = size.w === 2 ? 380 : 180;
-        var w = size.h === 2 ? 380 : 180;
-
-        //i.src = "http://lorempixel.com/" + h + "/" + w + "/";
-
-        //e.appendChild(i);
-
-		c.appendChild(e);
-
-
-        //http://lorempixel.com/380/380/
-	};
-
-
-
-	</script>
-
 	<body>
-		<div class="container">
-		</div>
-
-
-
-
+		<div class="container"></div>
+        <div class="load-more"><p>LOAD MORE</p></div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script  type="text/javascript" src="http://xoxco.com/projects/code/breakpoints/breakpoints.js"></script>
+
         <script src="js/jquery.jigsaw.js"></script>
 
         <script type="text/javascript">
 
+            var breakpoints = [],
+                tileWidth = 200,
+                i = 0;
+
+            for (i = 0; i < 7; i += 1) {
+                breakpoints[i] = tileWidth * (i+1);
+            }
+
+
+            $(window).setBreakpoints({
+            // use only largest available vs use all available
+                distinct: true, 
+            // array of widths in pixels where breakpoints
+            // should be triggered
+                breakpoints: breakpoints
+            }); 
+
+
+
             $( document ).ready(function() {
-
-
                 $(".container").jigsaw({
-                    containerWidth: 1400,
-                    tileWidth: 200,
-                    numberofColumns: 8,
+                    tileWidth: tileWidth,
                     spacing: 20,
-                    url: ""
+                    url: "",
+                    demo: true,
+                    breakpoints: breakpoints
                 });
-
-
             });
-
 
         </script>
 	</body>
 
 </html>
-
-
-
-
-
