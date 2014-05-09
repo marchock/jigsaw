@@ -55,7 +55,34 @@
 
                 solveJigsaw: function (containerWidth) {
 
-                    var numOfImages = 60;
+
+
+                    var testTemplate = [
+                        {x: 2, y: 1},
+                        {x: 2, y: 2},
+                        {x: 2, y: 2},
+                        {x: 2, y: 1},
+                        {x: 1, y: 1},
+                        {x: 2, y: 1},
+                        {x: 1, y: 1},
+                        {x: 1, y: 1},
+                        {x: 2, y: 1},
+                        {x: 1, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1},
+                        {x: 1, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1},
+                        {x: 2, y: 1}
+                    ]
+
+
+
+                    var numOfImages = 20;
 
                     this.cols = Math.round(containerWidth / this.settings.tileWidth);
 
@@ -81,6 +108,11 @@
                         x = this.getNum();
                         y = this.getNum();
 
+                        // x = testTemplate[i].x;
+                        // y = testTemplate[i].y;
+
+                        //console.log(x, y);
+
                         this.tiles[i] = this.tileTemplate(x, y);
                         this.numOfTiles += (x * y)
                     }
@@ -100,6 +132,8 @@
 
                 build: function () {
 
+                    //console.log(this.grid)
+
                     var i = 0,
                         acC = 0,
                         acR = 0,
@@ -113,6 +147,10 @@
                         //this.consoleLogGrid(this.grid);
                         
                         addTile = true;
+                        console.log(i, "GRID SPACE AVAILABLE = ", this.grid[acR][acC], tc, this.tiles[tc], acC)
+
+                        //console.log("2X1 - num", tc, this.grid[0]);
+                        //console.log("2X1 - num", tc, this.grid[1]);
 
                         // if grid block is false then update block
                         if (!this.grid[acR][acC]) {
@@ -120,7 +158,13 @@
                             /*
                              * if tile width and height is 2 tiles wide
                              */
-                            if (this.tiles[tc].h === 2 && this.tiles[tc].w === 2) {
+
+                             //console.log( "WIDTH: ", this.tiles[tc].w, "HEIGHT: ", this.tiles[tc].h)
+
+
+                            if (this.tiles[tc].w === 2 && this.tiles[tc].h === 2 && !this.tiles[tc].created) {
+
+                                //console.log("2X2 - num", tc);
 
 
                                 /*
@@ -171,9 +215,9 @@
                                          * &&
                                          * tile has not been created in html 
                                          */
-                                        if (this.tiles[c].w === 1 && !this.tiles[tc].created) {
+                                        if (this.tiles[c].w === 1 && !this.tiles[c].created) {
                                             
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c+" 2x2");
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "-- 2X2 --");
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 
@@ -190,7 +234,9 @@
                             /*
                              * if tile width is 2 this.tiles wide
                              */
-                            } else if (this.tiles[tc].w === 2) {
+                            } else if (this.tiles[tc].w === 2 && this.tiles[tc].h === 1 && !this.tiles[tc].created) {
+                                //console.log("2X1 - num", tc, this.grid[0]);
+                                console.log("2X1 - num", tc);
 
                                 // if this.grid position is false and if current column position is less then max col width
 
@@ -203,8 +249,10 @@
                                  */
                                 if (!this.grid[acR][acC+1] && (acC+1) < this.cols) {
 
+                                    console.log("GRID HAS SPACE FOR 2 X 1", tc, this.grid[acR][acC+1], (acC+1), this.cols);
+
                                     /*
-                                     * Update this.grid 1x2 tile
+                                     * Update this.grid WIDTH X HEIGHT -  2 x 1 tile
                                      */
                                     this.grid[acR][acC] = 1;
                                     this.grid[acR][acC+1] = 1;
@@ -221,16 +269,16 @@
                                     var c = tc;
                                     for (c = c; c < this.tiles.length; c += 1) {
 
-
+                                        console.log("FIND TILE TO FIT", c);
 
                                         //console.log("NEXT TILE +++++++++", c, this.tiles[c].w, this.tiles[tc].created)
 
 
-                                        if (this.tiles[c].w === 1 && !this.tiles[tc].created) {
-                                            console.log("NEXT TILE", c)
+                                        if (this.tiles[c].w === 1 && !this.tiles[c].created) {
+                                            //console.log("NEXT TILE", c)
 
 
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c+" 2x1");
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 
@@ -249,7 +297,9 @@
 
 
 
-                            } else if (this.tiles[tc].h === 2) {
+                            } else if (this.tiles[tc].w === 1 && this.tiles[tc].h === 2 && !this.tiles[tc].created) {
+
+                                //console.log("1X2 - num", tc);
 
                                 //console.log("acr", acR)
 
@@ -274,11 +324,11 @@
                                         //console.log("NEXT TILE +++++++++", c, this.tiles[c].w, this.tiles[tc].created)
 
 
-                                        if (this.tiles[c].w === 1 && !this.tiles[tc].created) {
-                                            console.log("NEXT TILE", c)
+                                        if (this.tiles[c].w === 1 && !this.tiles[c].created) {
+                                            //console.log("NEXT TILE", c)
 
 
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c+" 1x2");
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 
@@ -294,11 +344,42 @@
 
                                 }
 
-                            } else {
+                            } else if (this.tiles[tc].w === 1 && this.tiles[tc].h === 1 && !this.tiles[tc].created) {
+
+                                //console.log("1X1 - num", tc, this.grid);
+
                                 this.grid[acR][acC] = 1;
 
-                                if (this.tiles[tc].created) {
+                                if (this.tiles[tc].created) {   
                                     addTile = false;
+                                    tc += 1;
+
+                                    // find a tile to fit
+                                    var c = tc;
+                                    for (c = c; c < this.tiles.length; c += 1) {
+
+                                        console.log("FIND TILE TO FIT", c);
+
+                                        //console.log("NEXT TILE +++++++++", c, this.tiles[c].w, this.tiles[tc].created)
+
+
+                                        if (this.tiles[c].w === 1 && !this.tiles[c].created) {
+                                            //console.log("NEXT TILE", c)
+
+
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
+                                            this.tiles[c].created = true;
+                                            this.grid[acR][acC] = 1;
+
+                                            if (this.tiles[c].h === 2) {
+                                                this.grid[acR + 1][acC] = 1;
+                                            }
+
+                                            //console.log("CREATE TILE: +++++++ : " ,acC, acR, this.tiles[c].className)
+
+                                            break;
+                                        }
+                                    }
                                 }
                             }
 
@@ -306,7 +387,7 @@
 
                             if (addTile) {
                                 if (this.tiles[tc].className) {
-                                    this.createTile(this.tiles[tc].className, acC, acR, this.tiles[tc], tc+" 1x1");
+                                    this.createTile(this.tiles[tc].className, acC, acR, this.tiles[tc], tc, "FIT");
                                     this.tiles[tc].created = true;
 
                                     tc += 1;
@@ -327,7 +408,7 @@
                             acR += 1;
                         }
 
-                        console.log(tc, this.stopPoint)
+                       // console.log(tc, this.stopPoint)
 
                         if (!this.tiles[tc] || tc === this.stopPoint) {
                             console.log("COMPLETED")
@@ -361,7 +442,7 @@
                 },
 
 
-                createTile: function (cn, l, t, size, index) {
+                createTile: function (cn, l, t, size, index, message) {
                     var c = document.querySelector(".container"),
                         e = document.createElement("div"),
                         i = document.createElement("img"),
@@ -375,7 +456,7 @@
                         "width: " + ((ts * size.w) - s) + "px;" +
                         "height: " + ((ts * size.h) - s) + "px;");
 
-                    e.innerHTML = index;
+                    e.innerHTML = index + ": " + size.w +  " X " + size.h + " -----" + message;
 
 
                     c.appendChild(e);
