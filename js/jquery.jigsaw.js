@@ -70,14 +70,14 @@
                         {x: 1, y: 1},
                         {x: 2, y: 1},
                         {x: 2, y: 1},
-                        {x: 2, y: 1},
-                        {x: 2, y: 1},
                         {x: 1, y: 1},
                         {x: 2, y: 1},
                         {x: 2, y: 1},
+                        {x: 1, y: 2},
                         {x: 2, y: 1},
                         {x: 2, y: 1},
-                        {x: 2, y: 1}
+                        {x: 1, y: 2},
+                        {x: 1, y: 1}
                     ]
 
 
@@ -105,11 +105,11 @@
 
 
                     for (i=0; i < numOfImages; i += 1) {
-                        // x = this.getNum();
-                        // y = this.getNum();
+                        x = this.getNum();
+                        y = this.getNum();
 
-                        x = testTemplate[i].x;
-                        y = testTemplate[i].y;
+                        // x = testTemplate[i].x;
+                        // y = testTemplate[i].y;
 
                         //console.log(x, y);
 
@@ -348,13 +348,15 @@
 
                                 }
 
-                            } else if (this.tiles[tc].w === 1 && this.tiles[tc].h === 1 && !this.tiles[tc].created) {
+                            } else if (this.tiles[tc].w === 1 && 
+                                        this.tiles[tc].h === 1 && 
+                                        !this.tiles[tc].created) {
 
-                                console.log("1X1: ", this.tiles[tc].w, this.tiles[tc].h, this.tiles[tc].created);
+                                console.log("@@@@@@@@@@@@1X1: ", this.tiles[tc].w, this.tiles[tc].h, this.tiles[tc].created);
 
                                 this.grid[acR][acC] = 1;
 
-                                if (this.tiles[tc].created) {   
+                                  
                                     addTile = false;
                                     tc += 1;
 
@@ -384,7 +386,46 @@
                                             break;
                                         }
                                     }
+                                
+                            } else if (this.tiles[tc].created) {
+                                console.log(" TILE IS TRUE", this.tiles[tc].created)
+
+
+                                this.grid[acR][acC] = 1;
+
+                              
+                                addTile = false;
+                                tc += 1;
+
+                                // find a tile to fit
+                                var c = tc;
+                                for (c = c; c < this.tiles.length; c += 1) {
+
+                                    console.log("FIND TILE TO FIT", c);
+
+                                    //console.log("NEXT TILE +++++++++", c, this.tiles[c].w, this.tiles[tc].created)
+
+
+                                    if (this.tiles[c].w === 1 && !this.tiles[c].created) {
+                                        //console.log("NEXT TILE", c)
+
+
+                                        this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "1X1 FIND");
+                                        this.tiles[c].created = true;
+                                        this.grid[acR][acC] = 1;
+
+                                        if (this.tiles[c].h === 2) {
+                                            this.grid[acR + 1][acC] = 1;
+                                        }
+
+                                        //console.log("CREATE TILE: +++++++ : " ,acC, acR, this.tiles[c].className)
+
+                                        break;
+                                    }
                                 }
+
+
+
                             }
 
 
