@@ -59,12 +59,12 @@
 
                     var testTemplate = [
                         {x: 2, y: 1},
+                        {x: 2, y: 1},
                         {x: 2, y: 2},
                         {x: 2, y: 2},
-                        {x: 2, y: 1},
                         {x: 1, y: 1},
-                        {x: 2, y: 1},
-                        {x: 1, y: 1},
+                        {x: 2, y: 2},
+                        {x: 2, y: 2},
                         {x: 1, y: 1},
                         {x: 2, y: 1},
                         {x: 1, y: 1},
@@ -105,11 +105,11 @@
 
 
                     for (i=0; i < numOfImages; i += 1) {
-                        x = this.getNum();
-                        y = this.getNum();
+                        // x = this.getNum();
+                        // y = this.getNum();
 
-                        // x = testTemplate[i].x;
-                        // y = testTemplate[i].y;
+                        x = testTemplate[i].x;
+                        y = testTemplate[i].y;
 
                         //console.log(x, y);
 
@@ -216,14 +216,18 @@
                                          * tile has not been created in html 
                                          */
                                         if (this.tiles[c].w === 1 && !this.tiles[c].created) {
+
+
                                             
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "-- 2X2 --");
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "2X2 FIND");
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 
                                             if (this.tiles[c].h === 2) {
                                                 this.grid[acR + 1][acC] = 1;
                                             }
+
+                                            console.log("FIND TILE TO FIT:", c, this.tiles[c])
 
                                             break;
                                         }
@@ -278,7 +282,7 @@
                                             //console.log("NEXT TILE", c)
 
 
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "2X1 FIND");
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 
@@ -328,7 +332,7 @@
                                             //console.log("NEXT TILE", c)
 
 
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "1X2 FIND");
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 
@@ -346,7 +350,7 @@
 
                             } else if (this.tiles[tc].w === 1 && this.tiles[tc].h === 1 && !this.tiles[tc].created) {
 
-                                //console.log("1X1 - num", tc, this.grid);
+                                console.log("1X1: ", this.tiles[tc].w, this.tiles[tc].h, this.tiles[tc].created);
 
                                 this.grid[acR][acC] = 1;
 
@@ -367,7 +371,7 @@
                                             //console.log("NEXT TILE", c)
 
 
-                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
+                                            this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c, "1X1 FIND");
                                             this.tiles[c].created = true;
                                             this.grid[acR][acC] = 1;
 

@@ -9,7 +9,7 @@
   .container > div {
     float: left;
     position: absolute;
-    font-size: 60px;
+    font-size: 32px;
     font-family: arial; }
     /* line 18, ../scss/app.scss */
     .container > div > img {
