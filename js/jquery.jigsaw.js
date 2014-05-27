@@ -2,10 +2,21 @@
 // TODO -------
 
 
-// refresh tiles until 19th tile does not load, investigate why...
+// animate tiles 
+
+// click on a tile and the tile will cover the entire screen (animated in and out )
+
+// create an object data template 
+
+// clicking on load more - if there are more tiles to load on not
+
+// scrolling down to the end will load more tiles (create as an option)
 
 
-// LOAD MORE -- search grid for spaces then load more tiles to grid
+// comment code descriptively as possible 
+
+
+
 
 
 
@@ -85,6 +96,15 @@
                         //that.stopPoint = 40;
                         that.addMoreTiles();
                     });
+
+
+                    // scroll to end of page and create more tiles
+                    
+                    // $(window).scroll(function () { 
+                    //    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+                    //       that.addMoreTiles();
+                    //    }
+                    // });
 
                 },
 
@@ -378,10 +398,29 @@
 
                     // Apply height to container
 
-                    // TODO: check the last row inside of grid and see if any tiles have 
-                    // been applied. to Fix container height 
 
-                    // delete rows that are empty 
+                    var c, ii, d = [];
+                    // search rows for empty columns 
+                    for (i = 0; i < this.grid.length; i += 1) {
+                        c = 0;
+                        for (ii = 0; ii < this.grid[i].length; ii += 1) {
+                            if (!this.grid[i][ii]) {
+                                c += 1;
+                            }
+                        }
+
+                        // if the entire row is false then add row number to be deleted
+                        if (c === this.cols) {
+                            d.push(i);
+                        }
+
+                    }
+                    // reverse array to start the delete loop with the highest number 
+                    d.reverse();
+
+                    for (i = 0; i < d.length; i += 1) {
+                        this.grid.splice(d[i], 1);
+                    }
 
                     $(this.element)[0].style.height = (this.grid.length * this.settings.tileWidth) + "px";
                 },
@@ -396,9 +435,6 @@
                         if (this.tiles[c].w === 1 && !this.tiles[c].created) {
 
                             // check grid space available goes here 
-
-                            // creating a new 20 will sometimes cause duplicates and tiles positioning
-                            // on top of another
 
                             //console.log("FIND", this.tiles[c].className, acR, acC, c, this.gridHasSpace(this.tiles[c].className, acR, acC))
 
