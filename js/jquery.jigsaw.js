@@ -1,6 +1,22 @@
 
 // TODO -------
 
+// http://jsfiddle.net/quirksmode/v3ApX/2/
+
+// grab elements and use class names to identify tile widths and heights
+
+
+// browser resize - reposition tiles not rebuild html
+
+
+// breakpoint - fix build method to allow one column 
+
+
+// ------------------------------------------------------------------------
+
+ // TODO LATER 
+
+
 
 // animate tiles 
 
@@ -42,6 +58,8 @@
 
                 defaults = {
 
+                    data: "html",
+
                     tileWidth: 200,
 
                     spacing: 0,
@@ -67,7 +85,37 @@
         Plugin.prototype = {
 
                 init: function () {
-                    var that = this;
+
+                    var that = this,
+                        w = $(window).width();
+
+
+
+                    if (this.settings.tileResize[0].bpExitEndPoint >= w) {
+                        this.settings.tileWidth = this.settings.tileResize[0].tileWidth;
+                        this.bpEOF = Math.round(this.settings.tileResize[0].bpExitEndPoint / this.settings.tileResize[0].tileWidth);
+                    } else {
+                        this.settings.tileWidth = this.settings.tileResize[1].tileWidth;
+                        this.bpEOF = Math.round(this.settings.tileResize[1].bpExitEndPoint / this.settings.tileResize[1].tileWidth);
+                    }
+
+                    console.log(w, this.settings.tileResize[0].bpExitEndPoint)
+
+
+                    this.setupBreakPoints(this.settings.tileWidth);
+
+
+                    // setTimeout(function () {
+
+                    //     that.settings.tileWidth = 300
+
+                    //     $(window).resetBreakpoints();
+                    //     that.setupBreakPoints(that.settings.tileWidth);
+
+                    //     console.log("working")
+                    // }, 5000)
+
+                    
 
                     // track where tiles are positioned "3 Dimensional ARRAY"
                     this.grid = [];
@@ -77,6 +125,7 @@
 
                     // number of tiles created "NUMBER"
                     this.numOfTiles = 0;
+                    this.tileCounter = 0;
 
 
                     // limit the number of tiles created 
@@ -85,21 +134,39 @@
                     // get end of file number
                     this.eof = 20;
 
-                    this.startLoop = 0
+                    this.startLoop = 0;
 
 
 
-                    this.setupBreakPoints();
+
+
+
+
+                    switch(this.settings.data) {
+                        case "html":
+                            this.getTilesDataFromHTML();
+
+                          break;
+                        case "demo":
+                        case "random":
+                            this.buildTilesData();
+                          break;
+                    }
+
+
+
+
+                    
 
                     $(".load-more").click(function () {
-                        console.log("YEAH WORKING")
+                        //console.log("YEAH WORKING")
                         //that.stopPoint = 40;
                         that.addMoreTiles();
                     });
 
 
                     // scroll to end of page and create more tiles
-                    
+
                     // $(window).scroll(function () { 
                     //    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
                     //       that.addMoreTiles();
@@ -154,13 +221,19 @@
                 },
 
 
+                /*
+                 * 
+                 */
                 browserResized: function (containerWidth) {
+
                     this.containerWidth = containerWidth;
 
+                    // reset start loop to zero 
                     this.startLoop = 0;
 
                     // calculate the number of columns 
                     this.cols = Math.round(this.containerWidth / this.settings.tileWidth);
+
 
                     this.solveJigsaw();
                 },
@@ -178,70 +251,104 @@
                     this.solveJigsaw(); 
                 },
 
-                solveJigsaw: function (containerWidth) {
+                getTilesDataFromHTML: function () {
+
+                    this.tileElements = $(this.element).find(this.settings.tileClassName);
+
+                    this.stopPoint = this.tileElements.length;
+
+                    this.eof = this.tileElements.length;
+
+                    this.startLoop = 0;
+
+                    
+
+                    for (i = 0; i < this.tileElements.length; i += 1) {
+
+                        for (ii = 0; ii < this.settings.tileSizes.length; ii += 1) {
+
+                             //console.log($(his.tileElements[i]).hasClass(this.settings.tileSizes[ii].name))
+
+                            if($(this.tileElements[i]).hasClass(this.settings.tileSizes[ii].name)) {
+                                x = this.settings.tileSizes[ii].size[0];
+                                y = this.settings.tileSizes[ii].size[1];
+                                this.tiles.push(this.tileTemplate(x, y));
+
+                                this.tileCounter += (x * y)
+                            }
+                        }
+
+                    }
+
+                    //console.log(this.tiles);
+                },
+
+                buildTilesData: function () {
+
+                    for (i = this.startLoop; i < eof; i += 1) {
+
+                        if (this.settings.demo) {
+                            // demo || could be used for dynamic content
+                            x = testTemplate[i].x;
+                            y = testTemplate[i].y;
+                        } else {
+                            // random tiles created
+                            x = this.getNum(2);
+                            y = this.getNum(2);
+                        }
+
+                        // apply tile template to tiles array
+                        this.tiles[i] = this.tileTemplate(x, y);
+
+                        // calculate the total number of tiles
+                        this.numOfTiles += (x * y)
+
+                    }
+                },
+
+                solveJigsaw: function () {
 
                     var testTemplate = this.demoBlocks(),
                         i = 0,
                         eof = this.eof,
                         x,  
                         y;
-                    
 
+
+                    // reset number of tiles
+                    this.numOfTiles = this.tileCounter;
+                
+                    // a browser resize will not need to create more tiles 
+                    // there for tiles will only be created when addMoreTiles method
+                    // has been triggered
                     if (this.tiles.length < eof) {
 
-                        for (i = this.startLoop; i < eof; i += 1) {
-
-                            if (this.settings.demo) {
-                                x = testTemplate[i].x;
-                                y = testTemplate[i].y;
-                            } else {
-                                x = this.getNum();
-                                y = this.getNum();
-                            }
-
-                            // apply tile template to tiles array
-                            this.tiles[i] = this.tileTemplate(x, y);
-
-                            // calculate the total number of tiles
-                            this.numOfTiles += (x * y)
-
-                        }
 
                     } else {
 
+                        // reset all tiles created to false when browser resized 
 
-                        // reset all tiles created to false when browser resize 
-
-                        //
                         for (i = 0; i < this.tiles.length; i += 1) {
                             this.tiles[i].created = false;
                         }
-                        this.grid = [];
 
+                        this.grid = [];
                     }
 
-
-
-
-
-
+                    // calculate the number of rows
                     this.rows = Math.round(this.numOfTiles / this.cols);
 
-                    
+                    //console.log(this.numOfTiles, this.cols, this.rows)
 
+                    
+                    // create columns inside of each row
                     for (i = 0; i < this.rows; i += 1) {
 
-                        // if grid row has no array then create column
+                        // if grid row has no array then create columns
                         if (!this.grid[i]) {
                             this.grid[i] = this.setArrayLength(this.cols)
-
-                            //console.log("CREATE ROW", i)
                         }
-                        
                     }
-
-
-                    //console.log("solveJigsaw", this.rows, this.grid, this.numOfTiles, this.cols)
 
                     this.build();
                 },
@@ -249,12 +356,13 @@
                 build: function () {
 
                     var i = 0,
-                        acC = 0,
-                        acR = 0,
+                        acC = 0,// array counter column 
+                        acR = 0,// array counter row
                         tc = this.startLoop,
                         addTile;
+
                     /*
-                     * Set-up grid array
+                     * search grid array for empty spaces to fit tiles
                      */
                     for (i=0; i < this.numOfTiles; i += 1) {
 
@@ -262,22 +370,59 @@
                         
                         addTile = true;
 
-                        // if grid block is false then space available for a block 
+                        //console.log(acR, acC, i, this.numOfTiles)
 
-                        // acR = array counter row
-                        // acC = array counter column 
-
-
-                        //console.log("for loop", this.grid[acR][acC], i, tc)
-
+                        // if grid position is false then space is available for a tile 
                         if (!this.grid[acR][acC]) {
 
+                            // is tile created 
+                            // check if tile can fit in grid
+                            // true then create tile
+                            // false search for tile to fit.
+
+
+// ************************************************************************************
+
+
+// use this code to rework BUILD method
+
+// should be able to add a tiles of any size to grid 
+
+
+
+                            // if (this.tiles[tc].created) {
+
+                            //     if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
+                            //         this.updateGrid(this.tiles[tc].className, acR, acC);
+                            //     } else {
+                            //         addTile = false;
+                            //         this.searchForTile(tc, acR, acC);
+                            //     }
+                            // else {
+                            //         addTile = false;
+                            //         this.searchForTile(tc, acR, acC);
+                            // }
+
+
+
+
+// ************************************************************************************
 
 
                             /*
-                             * 2 X 2 TILE  
+                             * 2 X 2 TILE
+                             *
+                             * has this tile been created and can it fit in grid current position 
                              */
                             if (this.isTileCreated(tc, 2, 2)) {
+
+
+
+
+                                //console.log(this.isTileCreated(tc, 2, 2), this.gridHasSpace(this.tiles[tc].className, acR, acC), this.tiles[tc].className, tc)
+
+
+
 
                                 if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
 
@@ -347,8 +492,8 @@
 
                             if (addTile) {
                                 if (this.tiles[tc].className) {
-                                    this.createTile(this.tiles[tc].className, acC, acR, this.tiles[tc], tc);
-                                    this.tiles[tc].created = true;
+                                    //this.createTile(this.tiles[tc].className, acC, acR, this.tiles[tc], tc);
+                                    //this.tiles[tc].created = true;
                                     this.updateTile(tc, acR, acC);
 
                                     tc += 1;
@@ -368,21 +513,39 @@
                         } else {
                             acC = 0;
                             acR += 1;
+
+
+                            // if grid row is empty create new row if for loop has not finished
+                            if (i < (this.numOfTiles - 1)) {
+                                if (!this.grid[acR]) {
+                                    //console.log("NEW ROW REQUIRED")
+                                    this.grid[this.grid.length] = this.setArrayLength(this.cols)
+                                }
+                            }
+
                         }
 
 
                         if (!this.tiles[tc] || tc === this.stopPoint) {
-                            console.log("COMPLETED", acR)
+                            //console.log("COMPLETED", acR)
 
                             //this.consoleLogGrid(this.grid);
                             //console.log(this.tiles);
+
+
+                            this.updateHTMLElements();
+
+
+
                             break;
                         }
 
-
+                        // if tile counter has not reached end of count and for loop
+                        // counter (i) is equal to or greater than this.numOfTiles
+                        // then a new grid row is to be crated and this.numOfTiles plus 1
                         if (tc < this.stopPoint && i >= (this.numOfTiles - 1)) {
 
-                            console.log("BROKEN", this.grid.length, acR)
+                            //console.log("BROKEN", this.grid.length, acR)
 
                             if (this.grid.length === acR) {
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
@@ -423,6 +586,44 @@
                     }
 
                     $(this.element)[0].style.height = (this.grid.length * this.settings.tileWidth) + "px";
+
+                    //this.animateTiles($(".tile"));
+                },
+
+
+                updateHTMLElements: function () {
+                    var i = 0;
+                        eof = this.tileElements.length;
+
+                    for (i = 0; i < eof; i += 1) {
+
+                        this.tileElements[i].style.width = this.tiles[i].cssWidth + "px";
+                        this.tileElements[i].style.height = this.tiles[i].cssHeight + "px";
+                        this.tileElements[i].style.left = this.tiles[i].l + "px";
+                        this.tileElements[i].style.top = this.tiles[i].t + "px";
+                        this.tileElements[i].innerHTML = i
+
+                    }
+                },
+
+
+                animateTiles: function () {
+                    var tile = $(".tile");
+
+                    //console.log(tile)
+
+
+                    setTimeout(function () {
+
+
+                    for (i=0; i < tile.length; i += 1) {
+                        tile[i].setAttribute("class", "animate")
+                    }
+
+
+                        //$(".tile").addClass("animate")
+                    }, 1000)
+                    //var tile = 
                 },
 
 
@@ -440,10 +641,10 @@
 
                             if (this.gridHasSpace(this.tiles[c].className, acR, acC)) {
 
-                                this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
+                                //this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
                                 this.updateGrid(this.tiles[c].className, acR, acC);
                                 this.tiles[c].created = true;
-                                this.updateTile(index, acR, acC);
+                                this.updateTile(c, acR, acC);
 
                                 break;
                             }
@@ -454,10 +655,10 @@
 
                             if (this.gridHasSpace(this.tiles[c].className, acR, acC)) {
 
-                                this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
+                                //this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
                                 this.updateGrid(this.tiles[c].className, acR, acC);
                                 this.tiles[c].created = true;
-                                this.updateTile(index, acR, acC);
+                                this.updateTile(c, acR, acC);
 
                                 break;
                             }
@@ -478,12 +679,19 @@
                 },
 
                 updateTile: function (index, row, column) {
-                    var top = (row * this.settings.tileWidth + (this.settings.spacing/2)),
-                        left = (column * this.settings.tileWidth + (this.settings.spacing/2));
+                    var top = (row * this.settings.tileWidth + (this.settings.spacing / 2)),
+                        left = (column * this.settings.tileWidth + (this.settings.spacing / 2)),
+                        w = ((this.settings.tileWidth * this.tiles[index].w) - this.settings.spacing),
+                        h = ((this.settings.tileWidth * this.tiles[index].h) - this.settings.spacing);
 
+                    this.tiles[index].created = true;
                     this.tiles[index].t = top;
                     this.tiles[index].l = left;
+                    this.tiles[index].cssWidth = w;
+                    this.tiles[index].cssHeight = h;
                     this.tiles[index].created = true;
+
+                    //console.log(index, this.tiles[index])
                 },
 
 
@@ -506,6 +714,8 @@
 
                 gridHasSpace: function (string, row, column) {
                     var b = false;
+
+                    //console.log("gridHasSpace", string, row, column)
 
                     switch(string) {
                         case "box-1-1":
@@ -534,7 +744,7 @@
                             // 1 0
 
                             if (this.grid.length === (row + 1)) {
-                                console.log("EXTEND ARRAY ROW")
+                                //console.log("EXTEND ARRAY ROW")
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
                             }
 
@@ -550,7 +760,7 @@
                             // 1 1
 
                             if (this.grid.length === (row + 1)) {
-                                console.log("EXTEND ARRAY ROW")
+                                //console.log("EXTEND ARRAY ROW")
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
                             }
 
@@ -619,6 +829,8 @@
                         h: h,
                         t: 0,
                         l: 0,
+                        cssWidth: 0,
+                        cssHeight: 0,
                         className: "box-" + w + "-" + h,
                         created: false
                     }
@@ -635,8 +847,8 @@
                 },
 
 
-                getNum: function () {
-                    return Math.floor((Math.random()*2)+1);
+                getNum: function (num) {
+                    return Math.floor((Math.random() * num) + 1);
                 },
 
                 createTile: function (cn, l, t, size, index) {
@@ -645,17 +857,29 @@
                         i = document.createElement("img"),
                         ts = this.settings.tileWidth,
                         s = this.settings.spacing;
+                        
 
-                    e.setAttribute("class", cn);
+                    var lorempixel = ["abstract", "animals", "business", "cats", "city", "food", "nightlife", "fashion", "people", "nature", "sports", "technics", "transport"];
+
+                    var num = this.getNum(10);
+                    var lorempixelIndex = this.getNum(lorempixel.length-1);
+
+
+                    i.src = "http://lorempixel.com/" +
+                            ((ts * size.w) - s) + 
+                            "/" + ((ts * size.h) - s) + "/" + lorempixel[lorempixelIndex] + "/" + num +"/";
+
+                    
+
+                    e.setAttribute("class", cn + " tile");
                     e.setAttribute("style", 
                         "top: " + (t * ts + (s/2)) + "px;" + 
                         "left: " + ((l * ts) + (s/2)) + "px;" +
                         "width: " + ((ts * size.w) - s) + "px;" +
                         "height: " + ((ts * size.h) - s) + "px;");
 
-                    e.innerHTML = index + ": " + size.w +  " X " + size.h;
-
-
+                    //e.innerHTML = index + ": " + size.w +  " X " + size.h;
+                    e.appendChild(i);
                     c.appendChild(e);
                 },
 
@@ -664,33 +888,100 @@
                         eof = grid.length;
 
                     for (i = 0; i < eof; i += 1) {
-                       console.log(grid[i]) 
+                       //console.log(grid[i]) 
                     }
-                    console.log("-----------------------------------------------");
+                    //console.log("-----------------------------------------------");
                 },
 
-                setupBreakPoints: function () {
+                setupBreakPoints: function (tileWidth) {
 
-                    var that = this,
+    console.log("setupBreakPoints")
+                    //this.bpEOF = Math.round(this.settings.tileResize[0].bpExitEndPoint / this.settings.tileResize[0].tileWidth);
+
+
+
+                    var breakpoints = [],
                         i = 0,
-                        eof = this.settings.breakpoints.length,
-                        value = 0;
+                        eof = 0,
+                        value = 0,
+                        me = this,
+                        c = 2;
+
+                    for (i = 0; i < (this.bpEOF); i += 1) {
+                        breakpoints[i] = tileWidth * (c);
+                        c += 1;
+                    }
+
+                    console.log(breakpoints)
+
+
+                    $(window).setBreakpoints({
+                    // use only largest available vs use all available
+                        distinct: true, 
+                    // array of widths in pixels where breakpoints
+                    // should be triggered
+                        breakpoints: breakpoints
+                    }); 
+
+
+
+                    eof = breakpoints.length;
 
                     for (i = 0; i < eof; i += 1) {
 
-                        value = that.settings.breakpoints[i];
+                        value = breakpoints[i];
+
+                        $(window).bind('exitBreakpoint' + value, value, function (e) {
+
+                            console.log("exitBreakpoint")
+
+                            me.breakPointUpdate(e.data);
+
+                        });
+
 
                         $(window).bind('enterBreakpoint' + value, value, function (e) {
 
-                            $(that.element)[0].innerHTML = "";
-                            $(that.element)[0].style.width = e.data + "px";
-                            that.browserResized(e.data);
+
+                            //console.log("&&&& enterBreakpoint", e)
+
+                            if (e.data === 640) {
+                                console.log("BLOCK BREAK POINT")
+                                return;
+                            }
+
+                            //$(that.element)[0].innerHTML = "";
+                            $(me.element)[0].style.width = e.data + "px";
+                            me.browserResized(e.data);
+
+                            
                             
                         });
+                    }
+                },
 
+                breakPointUpdate: function (data) {
+                    var w = $(window).width();
+
+
+
+                    console.log("££££ exitBreakpoint", data, w)
+
+                    
+                    if (data === 500 && w < data) {
+                        $(window).resetBreakpoints();
+                        this.bpEOF = Math.round(this.settings.tileResize[0].bpExitEndPoint / this.settings.tileResize[0].tileWidth);
+                        this.settings.tileWidth = 160;
+                        this.setupBreakPoints(this.settings.tileWidth);
                     }
 
-                    $(window).setBreakpoints();
+                    if (data === 480 && w > data) {
+                        $(window).resetBreakpoints();
+                        this.bpEOF = Math.round(this.settings.tileResize[1].bpExitEndPoint / this.settings.tileResize[1].tileWidth);
+
+                        this.settings.tileWidth = 250;
+                        this.setupBreakPoints(this.settings.tileWidth);
+                    }
 
                 }
 
