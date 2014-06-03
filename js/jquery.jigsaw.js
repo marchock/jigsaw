@@ -66,7 +66,9 @@
 
                     url: "",
 
-                    demo: false
+                    demo: false,
+
+                    tileResizeIndex: 0
         };
 
         // The actual plugin constructor
@@ -87,21 +89,23 @@
                 init: function () {
 
                     var that = this,
-                        w = $(window).width();
+                        w = $(window).width(),
+                        i = 0;
 
 
+                    console.log("WINDOW WIDTH:", w)
 
-                    if (this.settings.tileResize[0].bpExitEndPoint >= w) {
-                        this.settings.tileWidth = this.settings.tileResize[0].tileWidth;
-                        this.bpEOF = Math.round(this.settings.tileResize[0].bpExitEndPoint / this.settings.tileResize[0].tileWidth);
-                    } else {
-                        this.settings.tileWidth = this.settings.tileResize[1].tileWidth;
-                        this.bpEOF = Math.round(this.settings.tileResize[1].bpExitEndPoint / this.settings.tileResize[1].tileWidth);
+
+                    // find which tile size to use
+                    for (i = 0; i < this.settings.tileResize.length; i += 1) {
+                        if (this.settings.tileResize[i].bpExitEndPoint >= w &&
+                            this.settings.tileResize[i].bpExitStartPoint < w) {
+                            this.settings.tileResizeIndex = i;
+                        }
                     }
 
-                    console.log(w, this.settings.tileResize[0].bpExitEndPoint)
-
-
+                    this.settings.tileWidth = this.settings.tileResize[this.settings.tileResizeIndex].tileWidth;
+                    this.bpEOF = Math.round(this.settings.tileResize[this.settings.tileResizeIndex].bpExitEndPoint / this.settings.tileResize[this.settings.tileResizeIndex].tileWidth);
                     this.setupBreakPoints(this.settings.tileWidth);
 
 
@@ -147,16 +151,14 @@
                             this.getTilesDataFromHTML();
 
                           break;
-                        case "demo":
-                        case "random":
+
+                        case "obj":
                             this.buildTilesData();
+
                           break;
                     }
 
 
-
-
-                    
 
                     $(".load-more").click(function () {
                         //console.log("YEAH WORKING")
@@ -235,6 +237,9 @@
                     this.cols = Math.round(this.containerWidth / this.settings.tileWidth);
 
 
+                    console.log("browserResized", this.cols, this.containerWidth, this.settings.tileWidth)
+
+
                     this.solveJigsaw();
                 },
 
@@ -267,8 +272,6 @@
 
                         for (ii = 0; ii < this.settings.tileSizes.length; ii += 1) {
 
-                             //console.log($(his.tileElements[i]).hasClass(this.settings.tileSizes[ii].name))
-
                             if($(this.tileElements[i]).hasClass(this.settings.tileSizes[ii].name)) {
                                 x = this.settings.tileSizes[ii].size[0];
                                 y = this.settings.tileSizes[ii].size[1];
@@ -279,8 +282,6 @@
                         }
 
                     }
-
-                    //console.log(this.tiles);
                 },
 
                 buildTilesData: function () {
@@ -338,9 +339,7 @@
                     // calculate the number of rows
                     this.rows = Math.round(this.numOfTiles / this.cols);
 
-                    //console.log(this.numOfTiles, this.cols, this.rows)
 
-                    
                     // create columns inside of each row
                     for (i = 0; i < this.rows; i += 1) {
 
@@ -366,11 +365,9 @@
                      */
                     for (i=0; i < this.numOfTiles; i += 1) {
 
-                        //this.consoleLogGrid(this.grid);
                         
                         addTile = true;
 
-                        //console.log(acR, acC, i, this.numOfTiles)
 
                         // if grid position is false then space is available for a tile 
                         if (!this.grid[acR][acC]) {
@@ -415,13 +412,6 @@
                              * has this tile been created and can it fit in grid current position 
                              */
                             if (this.isTileCreated(tc, 2, 2)) {
-
-
-
-
-                                //console.log(this.isTileCreated(tc, 2, 2), this.gridHasSpace(this.tiles[tc].className, acR, acC), this.tiles[tc].className, tc)
-
-
 
 
                                 if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
@@ -518,7 +508,7 @@
                             // if grid row is empty create new row if for loop has not finished
                             if (i < (this.numOfTiles - 1)) {
                                 if (!this.grid[acR]) {
-                                    //console.log("NEW ROW REQUIRED")
+
                                     this.grid[this.grid.length] = this.setArrayLength(this.cols)
                                 }
                             }
@@ -527,15 +517,8 @@
 
 
                         if (!this.tiles[tc] || tc === this.stopPoint) {
-                            //console.log("COMPLETED", acR)
-
-                            //this.consoleLogGrid(this.grid);
-                            //console.log(this.tiles);
-
 
                             this.updateHTMLElements();
-
-
 
                             break;
                         }
@@ -545,8 +528,6 @@
                         // then a new grid row is to be crated and this.numOfTiles plus 1
                         if (tc < this.stopPoint && i >= (this.numOfTiles - 1)) {
 
-                            //console.log("BROKEN", this.grid.length, acR)
-
                             if (this.grid.length === acR) {
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
                             }
@@ -555,9 +536,6 @@
                         }
                     }
 
-
-                    //console.log(this.tiles);
-                    //this.consoleLogGrid(this.grid);
 
                     // Apply height to container
 
@@ -602,7 +580,6 @@
                         this.tileElements[i].style.left = this.tiles[i].l + "px";
                         this.tileElements[i].style.top = this.tiles[i].t + "px";
                         this.tileElements[i].innerHTML = i
-
                     }
                 },
 
@@ -610,20 +587,15 @@
                 animateTiles: function () {
                     var tile = $(".tile");
 
-                    //console.log(tile)
-
-
                     setTimeout(function () {
-
 
                     for (i=0; i < tile.length; i += 1) {
                         tile[i].setAttribute("class", "animate")
                     }
 
-
                         //$(".tile").addClass("animate")
                     }, 1000)
-                    //var tile = 
+
                 },
 
 
@@ -637,11 +609,8 @@
 
                             // check grid space available goes here 
 
-                            //console.log("FIND", this.tiles[c].className, acR, acC, c, this.gridHasSpace(this.tiles[c].className, acR, acC))
-
                             if (this.gridHasSpace(this.tiles[c].className, acR, acC)) {
 
-                                //this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
                                 this.updateGrid(this.tiles[c].className, acR, acC);
                                 this.tiles[c].created = true;
                                 this.updateTile(c, acR, acC);
@@ -651,11 +620,8 @@
 
                         } else if (this.tiles[c].w === 2 && !this.tiles[c].created) {
 
-                            //console.log("FIND", this.tiles[c].className, acR, acC, c)
-
                             if (this.gridHasSpace(this.tiles[c].className, acR, acC)) {
 
-                                //this.createTile(this.tiles[c].className, acC, acR, this.tiles[c], c);
                                 this.updateGrid(this.tiles[c].className, acR, acC);
                                 this.tiles[c].created = true;
                                 this.updateTile(c, acR, acC);
@@ -690,32 +656,11 @@
                     this.tiles[index].cssWidth = w;
                     this.tiles[index].cssHeight = h;
                     this.tiles[index].created = true;
-
-                    //console.log(index, this.tiles[index])
                 },
 
 
-                // gridHasSpace: function (row, column) {
-
-
-                //     // check for 1 X 2 and 2 X 2
-
-                //     // use class name to identify which box to check
-
-
-                //     var b = false;
-
-                //     if (!this.grid[row][column + 1] && 
-                //         (column + 1) < this.cols) {
-                //         b = true;
-                //     }
-                //     return b;
-                // },
-
                 gridHasSpace: function (string, row, column) {
                     var b = false;
-
-                    //console.log("gridHasSpace", string, row, column)
 
                     switch(string) {
                         case "box-1-1":
@@ -744,12 +689,11 @@
                             // 1 0
 
                             if (this.grid.length === (row + 1)) {
-                                //console.log("EXTEND ARRAY ROW")
+
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
                             }
 
                             if (!this.grid[row + 1][column]) {
-                                //console.log("grid has space 2x1", this.grid[row + 1][column])
                                 b = true;
                             }
                           
@@ -760,7 +704,7 @@
                             // 1 1
 
                             if (this.grid.length === (row + 1)) {
-                                //console.log("EXTEND ARRAY ROW")
+
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
                             }
 
@@ -773,8 +717,6 @@
                             }
                           break;
                     }
-
-                    //console.log(string, b)
 
                         return b;
                 },
@@ -895,9 +837,10 @@
 
                 setupBreakPoints: function (tileWidth) {
 
-    console.log("setupBreakPoints")
-                    //this.bpEOF = Math.round(this.settings.tileResize[0].bpExitEndPoint / this.settings.tileResize[0].tileWidth);
+                    clearInterval(this.interval);
 
+                    this.previousBreakPoint = 0;
+                    this.nbp = 0;
 
 
                     var breakpoints = [],
@@ -905,86 +848,83 @@
                         eof = 0,
                         value = 0,
                         me = this,
-                        c = 2;
+                        c = 2,
+                        num = me.settings.tileResizeIndex;
 
-                    for (i = 0; i < (this.bpEOF); i += 1) {
-                        breakpoints[i] = tileWidth * (c);
-                        c += 1;
+                    // for (i = 0; i < (this.bpEOF); i += 1) {
+                    //     breakpoints[i] = tileWidth * (c);
+                    //     c += 1;
+                    // }
+
+
+                    var s = this.settings.tileResize[num].bpExitStartPoint,
+                        e = this.settings.tileResize[num].bpExitEndPoint;
+
+                    while (s <= e) {
+                        breakpoints[i] = s;
+                        s += this.settings.tileWidth
+                        i += 1;
                     }
 
-                    console.log(breakpoints)
+                    eof = breakpoints.length
 
+                    console.log(breakpoints, this.bpEOF)
 
-                    $(window).setBreakpoints({
-                    // use only largest available vs use all available
-                        distinct: true, 
-                    // array of widths in pixels where breakpoints
-                    // should be triggered
-                        breakpoints: breakpoints
-                    }); 
+                    this.interval = setInterval(function () {
+                        var w = $(window).width();
 
-
-
-                    eof = breakpoints.length;
-
-                    for (i = 0; i < eof; i += 1) {
-
-                        value = breakpoints[i];
-
-                        $(window).bind('exitBreakpoint' + value, value, function (e) {
-
-                            console.log("exitBreakpoint")
-
-                            me.breakPointUpdate(e.data);
-
-                        });
-
-
-                        $(window).bind('enterBreakpoint' + value, value, function (e) {
-
-
-                            //console.log("&&&& enterBreakpoint", e)
-
-                            if (e.data === 640) {
-                                console.log("BLOCK BREAK POINT")
-                                return;
+                        // find break point 
+                        for (i = 0; i < eof; i += 1) {
+                            if (breakpoints[i] <= w && breakpoints[i+1] > w) {
+                                me.nbp = breakpoints[i];
                             }
+                        }
 
-                            //$(that.element)[0].innerHTML = "";
-                            $(me.element)[0].style.width = e.data + "px";
-                            me.browserResized(e.data);
+                        // if break point value has changed update jigsaw
+                        if (me.previousBreakPoint !== me.nbp) {
+                            me.previousBreakPoint = me.nbp;
+                            me.browserResized(me.nbp);
+                            $(me.element)[0].style.width = me.nbp + "px";
+                        }
 
-                            
-                            
-                        });
-                    }
+                        
+
+
+
+
+                        
+
+                        if (breakpoints[0] > w) {
+
+
+                            console.log("CHANGE DOWN ------", breakpoints[0], w)
+
+                            me.settings.tileResizeIndex = me.settings.tileResizeIndex > 0 ? me.settings.tileResizeIndex-=1 : me.settings.tileResizeIndex;
+                            me.updateBreakPointParam(me.settings.tileResizeIndex);
+
+
+
+                        } else if (breakpoints[(breakpoints.length - 1)] < w) {
+
+                            console.log("CHANGE UP----------------", breakpoints[(breakpoints.length - 2)], w)
+                            me.settings.tileResizeIndex += 1;
+                            me.updateBreakPointParam(me.settings.tileResizeIndex);
+
+                        }
+
+
+
+                    }, 200);
                 },
 
-                breakPointUpdate: function (data) {
-                    var w = $(window).width();
 
+                updateBreakPointParam: function (num) {
 
-
-                    console.log("££££ exitBreakpoint", data, w)
-
-                    
-                    if (data === 500 && w < data) {
-                        $(window).resetBreakpoints();
-                        this.bpEOF = Math.round(this.settings.tileResize[0].bpExitEndPoint / this.settings.tileResize[0].tileWidth);
-                        this.settings.tileWidth = 160;
-                        this.setupBreakPoints(this.settings.tileWidth);
-                    }
-
-                    if (data === 480 && w > data) {
-                        $(window).resetBreakpoints();
-                        this.bpEOF = Math.round(this.settings.tileResize[1].bpExitEndPoint / this.settings.tileResize[1].tileWidth);
-
-                        this.settings.tileWidth = 250;
-                        this.setupBreakPoints(this.settings.tileWidth);
-                    }
+                    this.bpEOF = Math.round(this.settings.tileResize[num].bpExitEndPoint / this.settings.tileResize[num].tileWidth);
+                    this.settings.tileWidth = this.settings.tileResize[num].tileWidth;
+                    this.setupBreakPoints(this.settings.tileWidth);
 
                 }
-
         };
 
         // A really lightweight plugin wrapper around the constructor,

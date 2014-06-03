@@ -46,7 +46,6 @@
         <div class="load-more"><p>LOAD MORE</p></div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script  type="text/javascript" src="js/breakpoints.js"></script>
 
         <script src="js/jquery.jigsaw.js"></script>
 
@@ -90,12 +89,22 @@
                     tileResize: [
                         {
                             tileWidth: 160,
-                            bpExitStartPoint: 500,
-                            bpExitEndPoint: 500
+                            bpExitStartPoint: 0,
+                            bpExitEndPoint: 480
+                        },
+                        {
+                            tileWidth: 180,
+                            bpExitStartPoint: 360,
+                            bpExitEndPoint: 540
+                        },
+                        {
+                            tileWidth: 200,
+                            bpExitStartPoint: 400,
+                            bpExitEndPoint: 1400
                         },
                         {
                             tileWidth: 250,
-                            bpExitStartPoint: 480,
+                            bpExitStartPoint: 1250,
                             bpExitEndPoint: 3000
                         }
                     ],
