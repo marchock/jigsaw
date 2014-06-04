@@ -46,28 +46,10 @@
         <div class="load-more"><p>LOAD MORE</p></div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
+        <script src="js/data.js"></script>
         <script src="js/jquery.jigsaw.js"></script>
 
         <script type="text/javascript">
-
-            // var breakpoints = [],
-            //     tileWidth = 160,
-            //     i = 0;
-
-            // for (i = 0; i < 20; i += 1) {
-            //     breakpoints[i] = tileWidth * (i+1);
-            // }
-
-
-            // $(window).setBreakpoints({
-            // // use only largest available vs use all available
-            //     distinct: true, 
-            // // array of widths in pixels where breakpoints
-            // // should be triggered
-            //     breakpoints: breakpoints
-            // }); 
-
 
 
             $( document ).ready(function() {
@@ -89,27 +71,28 @@
                     tileResize: [
                         {
                             tileWidth: 160,
-                            bpExitStartPoint: 0,
-                            bpExitEndPoint: 480
-                        },
-                        {
-                            tileWidth: 180,
-                            bpExitStartPoint: 360,
-                            bpExitEndPoint: 540
+                            bpExitStartPoint: 320,
+                            bpExitEndPoint: 481,
+                            gutterSpacing: 2,
+                            spacing: 4
                         },
                         {
                             tileWidth: 200,
-                            bpExitStartPoint: 400,
-                            bpExitEndPoint: 1400
+                            bpExitStartPoint: 482,
+                            bpExitEndPoint: 1200,
+                            gutterSpacing: 5,
+                            spacing: 10
                         },
                         {
                             tileWidth: 250,
-                            bpExitStartPoint: 1250,
-                            bpExitEndPoint: 3000
+                            bpExitStartPoint: 1201,
+                            bpExitEndPoint: 3000,
+                            gutterSpacing: 10,
+                            spacing: 14
                         }
                     ],
 
-                    spacing: 10,
+                    spacing: 15,
                     url: "",
                     demo: false
                 });

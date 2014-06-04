@@ -1,17 +1,4 @@
 
-// TODO -------
-
-// http://jsfiddle.net/quirksmode/v3ApX/2/
-
-// grab elements and use class names to identify tile widths and heights
-
-
-// browser resize - reposition tiles not rebuild html
-
-
-// breakpoint - fix build method to allow one column 
-
-
 // ------------------------------------------------------------------------
 
  // TODO LATER 
@@ -30,9 +17,6 @@
 
 
 // comment code descriptively as possible 
-
-
-
 
 
 
@@ -88,38 +72,6 @@
 
                 init: function () {
 
-                    var that = this,
-                        w = $(window).width(),
-                        i = 0;
-
-
-                    console.log("WINDOW WIDTH:", w)
-
-
-                    // find which tile size to use
-                    for (i = 0; i < this.settings.tileResize.length; i += 1) {
-                        if (this.settings.tileResize[i].bpExitEndPoint >= w &&
-                            this.settings.tileResize[i].bpExitStartPoint < w) {
-                            this.settings.tileResizeIndex = i;
-                        }
-                    }
-
-                    this.settings.tileWidth = this.settings.tileResize[this.settings.tileResizeIndex].tileWidth;
-                    this.bpEOF = Math.round(this.settings.tileResize[this.settings.tileResizeIndex].bpExitEndPoint / this.settings.tileResize[this.settings.tileResizeIndex].tileWidth);
-                    this.setupBreakPoints(this.settings.tileWidth);
-
-
-                    // setTimeout(function () {
-
-                    //     that.settings.tileWidth = 300
-
-                    //     $(window).resetBreakpoints();
-                    //     that.setupBreakPoints(that.settings.tileWidth);
-
-                    //     console.log("working")
-                    // }, 5000)
-
-                    
 
                     // track where tiles are positioned "3 Dimensional ARRAY"
                     this.grid = [];
@@ -138,13 +90,8 @@
                     // get end of file number
                     this.eof = 20;
 
-                    this.startLoop = 0;
-
-
-
-
-
-
+                    this.startLoop = 0;         
+                    
 
                     switch(this.settings.data) {
                         case "html":
@@ -159,86 +106,19 @@
                     }
 
 
+                    this.setupBreakPoints();
+                    this.setupEvents();
 
-                    $(".load-more").click(function () {
-                        //console.log("YEAH WORKING")
-                        //that.stopPoint = 40;
-                        that.addMoreTiles();
-                    });
-
-
-                    // scroll to end of page and create more tiles
-
-                    // $(window).scroll(function () { 
-                    //    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-                    //       that.addMoreTiles();
-                    //    }
-                    // });
-
-                },
-
-                demoBlocks: function () {
-                    return [
-                        {x: 2, y: 2},
-                        {x: 2, y: 2},
-                        {x: 1, y: 2},
-                        {x: 2, y: 1},
-                        {x: 1, y: 1},
-                        {x: 1, y: 1},
-                        {x: 1, y: 2},
-                        {x: 2, y: 2},
-                        {x: 1, y: 2},
-                        {x: 2, y: 2},
-                        {x: 1, y: 2},
-                        {x: 1, y: 2},
-                        {x: 2, y: 1},
-                        {x: 2, y: 1},
-                        {x: 1, y: 2},
-                        {x: 1, y: 1},
-                        {x: 2, y: 2},
-                        {x: 2, y: 2},
-                        {x: 2, y: 1},
-                        {x: 2, y: 1},
-                        {x: 2, y: 2},
-                        {x: 2, y: 2},
-                        {x: 1, y: 2},
-                        {x: 2, y: 1},
-                        {x: 1, y: 1},
-                        {x: 1, y: 1},
-                        {x: 1, y: 2},
-                        {x: 2, y: 2},
-                        {x: 1, y: 2},
-                        {x: 2, y: 2},
-                        {x: 1, y: 2},
-                        {x: 1, y: 2},
-                        {x: 2, y: 1},
-                        {x: 2, y: 1},
-                        {x: 1, y: 2},
-                        {x: 1, y: 1},
-                        {x: 2, y: 2},
-                        {x: 2, y: 2},
-                        {x: 2, y: 1},
-                        {x: 2, y: 1}
-                    ]
                 },
 
 
                 /*
                  * 
                  */
-                browserResized: function (containerWidth) {
-
-                    this.containerWidth = containerWidth;
+                browserResized: function () {
 
                     // reset start loop to zero 
                     this.startLoop = 0;
-
-                    // calculate the number of columns 
-                    this.cols = Math.round(this.containerWidth / this.settings.tileWidth);
-
-
-                    console.log("browserResized", this.cols, this.containerWidth, this.settings.tileWidth)
-
 
                     this.solveJigsaw();
                 },
@@ -255,6 +135,16 @@
 
                     this.solveJigsaw(); 
                 },
+
+
+
+                /************************************************************************************
+                 * Construct tile param data
+                 *
+                 *
+                 *
+                 *
+                 *************************************************************************************/
 
                 getTilesDataFromHTML: function () {
 
@@ -309,7 +199,7 @@
 
                 solveJigsaw: function () {
 
-                    var testTemplate = this.demoBlocks(),
+                    var testTemplate = demoTiles,
                         i = 0,
                         eof = this.eof,
                         x,  
@@ -584,21 +474,6 @@
                 },
 
 
-                animateTiles: function () {
-                    var tile = $(".tile");
-
-                    setTimeout(function () {
-
-                    for (i=0; i < tile.length; i += 1) {
-                        tile[i].setAttribute("class", "animate")
-                    }
-
-                        //$(".tile").addClass("animate")
-                    }, 1000)
-
-                },
-
-
                 searchForTile: function (index, acR, acC) {
                     // search for a tile to fit inside grid position row and column
                     var c = index;
@@ -764,6 +639,32 @@
                     }
                 },
 
+                /************************************************************************************
+                 * support methods 
+                 *
+                 *
+                 *
+                 *
+                 *************************************************************************************/
+
+                setupEvents: function () {
+
+                    $(".load-more").click(function () {
+                        //console.log("YEAH WORKING")
+                        //that.stopPoint = 40;
+                        that.addMoreTiles();
+                    });
+
+
+                    // scroll to end of page and create more tiles
+
+                    // $(window).scroll(function () { 
+                    //    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+                    //       that.addMoreTiles();
+                    //    }
+                    // });
+
+                },
 
                 tileTemplate: function (w, h) {
                     return {
@@ -793,6 +694,41 @@
                     return Math.floor((Math.random() * num) + 1);
                 },
 
+
+                consoleLogGrid: function (grid) {
+                    var i = 0,
+                        eof = grid.length;
+
+                    for (i = 0; i < eof; i += 1) {
+                       //console.log(grid[i]) 
+                    }
+                    //console.log("-----------------------------------------------");
+                },
+
+
+                animateTiles: function () {
+                    var tile = $(".tile");
+
+                    setTimeout(function () {
+
+                    for (i=0; i < tile.length; i += 1) {
+                        tile[i].setAttribute("class", "animate")
+                    }
+
+                        //$(".tile").addClass("animate")
+                    }, 1000)
+
+                },
+
+
+
+                /************************************************************************************
+                 * create tile elements and output to HTML
+                 *
+                 *
+                 *
+                 *
+                 *************************************************************************************/
                 createTile: function (cn, l, t, size, index) {
                     var c = document.querySelector(".container"),
                         e = document.createElement("div"),
@@ -825,22 +761,33 @@
                     c.appendChild(e);
                 },
 
-                consoleLogGrid: function (grid) {
-                    var i = 0,
-                        eof = grid.length;
 
-                    for (i = 0; i < eof; i += 1) {
-                       //console.log(grid[i]) 
-                    }
-                    //console.log("-----------------------------------------------");
-                },
-
+                /************************************************************************************
+                 * find tile size to fit window
+                 * set break point to change tile size to fit window
+                 *
+                 *
+                 *
+                 *************************************************************************************/
                 setupBreakPoints: function (tileWidth) {
 
                     clearInterval(this.interval);
 
-                    this.previousBreakPoint = 0;
-                    this.nbp = 0;
+                    var w = $(window).width();
+
+
+                    // find which tile size to use
+                    for (i = 0; i < this.settings.tileResize.length; i += 1) {
+                        if (this.settings.tileResize[i].bpExitEndPoint >= w &&
+                            this.settings.tileResize[i].bpExitStartPoint < w) {
+                            this.settings.tileResizeIndex = i;
+
+                            w = w - (this.settings.tileResize[i].gutterSpacing * 2);
+                        }
+                    }
+
+                    this.settings.spacing = this.settings.tileResize[this.settings.tileResizeIndex].spacing;
+                    this.settings.tileWidth = this.settings.tileResize[this.settings.tileResizeIndex].tileWidth;
 
 
                     var breakpoints = [],
@@ -851,80 +798,46 @@
                         c = 2,
                         num = me.settings.tileResizeIndex;
 
-                    // for (i = 0; i < (this.bpEOF); i += 1) {
-                    //     breakpoints[i] = tileWidth * (c);
-                    //     c += 1;
-                    // }
+     
+                    // calculate the number of columns (MAth.floor rounds the number down)
+                    this.cols = Math.floor(w / this.settings.tileWidth);
 
+                    // calculate tiles to fit window
+                    this.settings.tileWidth += Math.floor((w - (this.settings.tileWidth * this.cols)) / this.cols);
 
-                    var s = this.settings.tileResize[num].bpExitStartPoint,
-                        e = this.settings.tileResize[num].bpExitEndPoint;
+                    // TODO - apply guttering to this
 
-                    while (s <= e) {
-                        breakpoints[i] = s;
-                        s += this.settings.tileWidth
-                        i += 1;
-                    }
+                    // find breakpoint to recalculate tile width
+                    breakpoints.push($(window).width() + 20);
+                    breakpoints.push($(window).width() - 20);
 
-                    eof = breakpoints.length
+                    // calculate new container width
+                    var ww = this.cols * this.settings.tileWidth;
 
-                    console.log(breakpoints, this.bpEOF)
+                    $(this.element)[0].style.width = ww + "px";
 
+                    // update jigsaw
+                    this.browserResized();
+
+                    // listen for widow width to change width
                     this.interval = setInterval(function () {
                         var w = $(window).width();
 
-                        // find break point 
-                        for (i = 0; i < eof; i += 1) {
-                            if (breakpoints[i] <= w && breakpoints[i+1] > w) {
-                                me.nbp = breakpoints[i];
-                            }
-                        }
 
-                        // if break point value has changed update jigsaw
-                        if (me.previousBreakPoint !== me.nbp) {
-                            me.previousBreakPoint = me.nbp;
-                            me.browserResized(me.nbp);
-                            $(me.element)[0].style.width = me.nbp + "px";
-                        }
+                       if (breakpoints[0] < w) {
 
-                        
+                            //console.log("CHANGE DOWN ------", breakpoints[0], w)
+                            me.setupBreakPoints();
 
-
-
-
-                        
-
-                        if (breakpoints[0] > w) {
-
-
-                            console.log("CHANGE DOWN ------", breakpoints[0], w)
-
-                            me.settings.tileResizeIndex = me.settings.tileResizeIndex > 0 ? me.settings.tileResizeIndex-=1 : me.settings.tileResizeIndex;
-                            me.updateBreakPointParam(me.settings.tileResizeIndex);
-
-
-
-                        } else if (breakpoints[(breakpoints.length - 1)] < w) {
-
-                            console.log("CHANGE UP----------------", breakpoints[(breakpoints.length - 2)], w)
-                            me.settings.tileResizeIndex += 1;
-                            me.updateBreakPointParam(me.settings.tileResizeIndex);
+                        } else if (breakpoints[1] > w) {
+                            me.setupBreakPoints();
+                            //console.log("CHANGE UP ------", breakpoints[1], w)
 
                         }
-
 
 
                     }, 200);
                 },
-
-
-                updateBreakPointParam: function (num) {
-
-                    this.bpEOF = Math.round(this.settings.tileResize[num].bpExitEndPoint / this.settings.tileResize[num].tileWidth);
-                    this.settings.tileWidth = this.settings.tileResize[num].tileWidth;
-                    this.setupBreakPoints(this.settings.tileWidth);
-
-                }
         };
 
         // A really lightweight plugin wrapper around the constructor,
