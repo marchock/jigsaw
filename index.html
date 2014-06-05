@@ -14,35 +14,37 @@
 
 	</head>
 	<body>
-		<div class="container">
-
-
-            <div class="item largeitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item largeitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item largeitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item largeitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item largeitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item largeitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-            <div class="item smallitem"></div>
-
+        <div class="something">
+    		<div class="container">
+                <div class="item largeitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item largeitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item largeitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item largeitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item largeitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item largeitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+                <div class="item smallitem"></div>
+            </div>
         </div>
+
+
+
         <div class="load-more"><p>LOAD MORE</p></div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -54,47 +56,44 @@
 
             $( document ).ready(function() {
                 $(".container").jigsaw({
-                    data: "html",
-                    tileClassName: ".item",
-                    tileSizes: [
+
+                    getDataFrom: "html",
+
+                    getWidthFrom: ".something",
+
+                    tile: [
                         {
-                            name: "smallitem",
-                            size: [1, 1]
+                            classname: "smallitem",
+                            w: 1,
+                            h: 1
                         },
                         {
-                            name: "largeitem",
-                            size: [2, 2]
+                            classname: "largeitem",
+                            w: 2,
+                            h: 2
                         }
                     ],
-                    tileWidth: 300,
 
-                    tileResize: [
+                    resize: [
                         {
+                            breakpoint: 320,
                             tileWidth: 160,
-                            bpExitStartPoint: 320,
-                            bpExitEndPoint: 481,
-                            gutterSpacing: 2,
-                            spacing: 4
+                            tileSpace: 4
                         },
-                        {
-                            tileWidth: 200,
-                            bpExitStartPoint: 482,
-                            bpExitEndPoint: 1200,
-                            gutterSpacing: 5,
-                            spacing: 10
-                        },
-                        {
-                            tileWidth: 250,
-                            bpExitStartPoint: 1201,
-                            bpExitEndPoint: 3000,
-                            gutterSpacing: 10,
-                            spacing: 14
-                        }
-                    ],
 
-                    spacing: 15,
-                    url: "",
-                    demo: false
+                        {
+                            breakpoint: 480,
+                            tileWidth: 200,
+                            tileSpace: 10
+                        },
+
+                        {
+
+                            breakpoint: 1200,
+                            tileWidth: 250,
+                            tileSpace: 14
+                        }
+                    ]
                 });
             });
 

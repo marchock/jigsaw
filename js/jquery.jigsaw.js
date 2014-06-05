@@ -44,15 +44,33 @@
 
                     data: "html",
 
-                    tileWidth: 200,
+                    tileWidth: 0,
 
                     spacing: 0,
 
+                    tile: {},
+
+
+                    // tile: {
+
+                    //     className: ".item",
+
+                    //     size: [
+                    //         {
+                    //             name: "smallitem",
+                    //             size: [1, 1]
+                    //         },
+                    //         {
+                    //             name: "largeitem",
+                    //             size: [2, 2]
+                    //         }
+                    //     ]
+                    // }
+
+
                     url: "",
 
-                    demo: false,
-
-                    tileResizeIndex: 0
+                    demo: false
         };
 
         // The actual plugin constructor
@@ -72,7 +90,6 @@
 
                 init: function () {
 
-
                     // track where tiles are positioned "3 Dimensional ARRAY"
                     this.grid = [];
 
@@ -90,10 +107,11 @@
                     // get end of file number
                     this.eof = 20;
 
-                    this.startLoop = 0;         
-                    
+                    this.startLoop = 0;
 
-                    switch(this.settings.data) {
+
+
+                    switch(this.settings.getDataFrom) {
                         case "html":
                             this.getTilesDataFromHTML();
 
@@ -105,41 +123,15 @@
                           break;
                     }
 
-
-                    this.setupBreakPoints();
+                    this.createBrowserWidthBreakPoints();
+                    this.browserResized();
                     this.setupEvents();
-
-                },
-
-
-                /*
-                 * 
-                 */
-                browserResized: function () {
-
-                    // reset start loop to zero 
-                    this.startLoop = 0;
-
-                    this.solveJigsaw();
-                },
-
-                addMoreTiles: function () {
-                    // limit the number of tiles created 
-                    this.stopPoint += 20;
-
-                    // get end of file number
-                    this.eof += 20;
-
-                    // start position of loop
-                    this.startLoop = this.tiles.length;
-
-                    this.solveJigsaw(); 
                 },
 
 
 
                 /************************************************************************************
-                 * Construct tile param data
+                 * Get Tile data from HTML, JSON or Object
                  *
                  *
                  *
@@ -148,7 +140,7 @@
 
                 getTilesDataFromHTML: function () {
 
-                    this.tileElements = $(this.element).find(this.settings.tileClassName);
+                    this.tileElements = $(this.element).children();
 
                     this.stopPoint = this.tileElements.length;
 
@@ -156,25 +148,28 @@
 
                     this.startLoop = 0;
 
-                    
 
                     for (i = 0; i < this.tileElements.length; i += 1) {
 
-                        for (ii = 0; ii < this.settings.tileSizes.length; ii += 1) {
+                        for (ii = 0; ii < this.settings.tile.length; ii += 1) {
 
-                            if($(this.tileElements[i]).hasClass(this.settings.tileSizes[ii].name)) {
-                                x = this.settings.tileSizes[ii].size[0];
-                                y = this.settings.tileSizes[ii].size[1];
+                            if($(this.tileElements[i]).hasClass(this.settings.tile[ii].classname)) {
+
+                                x = this.settings.tile[ii].w;
+
+                                y = this.settings.tile[ii].h;
+
                                 this.tiles.push(this.tileTemplate(x, y));
 
                                 this.tileCounter += (x * y)
                             }
                         }
-
                     }
                 },
 
                 buildTilesData: function () {
+
+                    // TODO --  this is broken 
 
                     for (i = this.startLoop; i < eof; i += 1) {
 
@@ -196,6 +191,15 @@
 
                     }
                 },
+
+
+                /************************************************************************************
+                 * Construct tile param data
+                 *
+                 *
+                 *
+                 *
+                 *************************************************************************************/
 
                 solveJigsaw: function () {
 
@@ -453,8 +457,7 @@
                         this.grid.splice(d[i], 1);
                     }
 
-                    $(this.element)[0].style.height = (this.grid.length * this.settings.tileWidth) + "px";
-
+                    this.updateElementHeight(this.grid.length * this.settings.tileWidth);
                     //this.animateTiles($(".tile"));
                 },
 
@@ -695,6 +698,28 @@
                 },
 
 
+                getWidth: function () {
+                    var w;
+
+                    if (this.settings.getWidthFrom) {
+                        w = $(this.settings.getWidthFrom).width();
+                    } else {
+                        w = $(window).width();
+                    }
+
+                    return w;
+                },
+
+
+                updateElementWidth: function (width) {
+                    $(this.element)[0].style.width = width + "px";
+                },
+
+                updateElementHeight: function (height) {
+                    $(this.element)[0].style.height = height + "px";
+                },
+
+
                 consoleLogGrid: function (grid) {
                     var i = 0,
                         eof = grid.length;
@@ -718,6 +743,20 @@
                         //$(".tile").addClass("animate")
                     }, 1000)
 
+                },
+
+
+                addMoreTiles: function () {
+                    // limit the number of tiles created 
+                    this.stopPoint += 20;
+
+                    // get end of file number
+                    this.eof += 20;
+
+                    // start position of loop
+                    this.startLoop = this.tiles.length;
+
+                    this.solveJigsaw(); 
                 },
 
 
@@ -763,81 +802,93 @@
 
 
                 /************************************************************************************
-                 * find tile size to fit window
-                 * set break point to change tile size to fit window
+                 * BROWSER RESIZE 
+                 * 
                  *
-                 *
+                 * 
                  *
                  *************************************************************************************/
-                setupBreakPoints: function (tileWidth) {
+                browserResized: function (tileWidth) {
 
                     clearInterval(this.interval);
 
-                    var w = $(window).width();
+                    var w = this.getWidth(),
+                        breakpoints = [],
+                        me = this;
 
+                    this.defineTileProperties(w);
+
+                    // find breakpoint to recalculate tile width
+                    breakpoints.push(w + 1);
+                    breakpoints.push(w - 1);
+
+                    // update containing element width
+                    this.updateElementWidth(this.cols * this.settings.tileWidth)
+
+                    // reset start loop to zero 
+                    this.startLoop = 0;
+
+                    this.solveJigsaw();
+
+                    this.listenForBrowserResize(breakpoints);
+                },
+
+
+                defineTileProperties: function (w) {
 
                     // find which tile size to use
-                    for (i = 0; i < this.settings.tileResize.length; i += 1) {
-                        if (this.settings.tileResize[i].bpExitEndPoint >= w &&
-                            this.settings.tileResize[i].bpExitStartPoint < w) {
-                            this.settings.tileResizeIndex = i;
+                    for (i = 0; i < this.settings.resize.length; i += 1) {
+                        if (this.bwbp[i][1] >= w &&
+                            this.bwbp[i][0] < w) {
 
-                            w = w - (this.settings.tileResize[i].gutterSpacing * 2);
+                            this.settings.resizeIndex = i;
+
                         }
                     }
 
-                    this.settings.spacing = this.settings.tileResize[this.settings.tileResizeIndex].spacing;
-                    this.settings.tileWidth = this.settings.tileResize[this.settings.tileResizeIndex].tileWidth;
+                    this.settings.spacing = this.settings.resize[this.settings.resizeIndex].tileSpace;
+                    this.settings.tileWidth = this.settings.resize[this.settings.resizeIndex].tileWidth;
 
-
-                    var breakpoints = [],
-                        i = 0,
-                        eof = 0,
-                        value = 0,
-                        me = this,
-                        c = 2,
-                        num = me.settings.tileResizeIndex;
-
-     
                     // calculate the number of columns (MAth.floor rounds the number down)
                     this.cols = Math.floor(w / this.settings.tileWidth);
 
                     // calculate tiles to fit window
                     this.settings.tileWidth += Math.floor((w - (this.settings.tileWidth * this.cols)) / this.cols);
 
-                    // TODO - apply guttering to this
+                },
 
-                    // find breakpoint to recalculate tile width
-                    breakpoints.push($(window).width() + 20);
-                    breakpoints.push($(window).width() - 20);
 
-                    // calculate new container width
-                    var ww = this.cols * this.settings.tileWidth;
+                listenForBrowserResize: function (breakpoints) {
+                    var w,
+                        me = this;
 
-                    $(this.element)[0].style.width = ww + "px";
-
-                    // update jigsaw
-                    this.browserResized();
-
-                    // listen for widow width to change width
                     this.interval = setInterval(function () {
-                        var w = $(window).width();
+                        w = me.getWidth();
 
-
-                       if (breakpoints[0] < w) {
-
-                            //console.log("CHANGE DOWN ------", breakpoints[0], w)
-                            me.setupBreakPoints();
+                        if (breakpoints[0] < w) {
+                            me.browserResized();
 
                         } else if (breakpoints[1] > w) {
-                            me.setupBreakPoints();
-                            //console.log("CHANGE UP ------", breakpoints[1], w)
-
+                            me.browserResized();
                         }
 
-
-                    }, 200);
+                    }, 200);       
                 },
+
+                createBrowserWidthBreakPoints: function () {
+                    this.bwbp = [];
+
+                    var i = 0,
+                        eof = this.settings.resize.length,
+                        s = 0,
+                        e = 0;
+
+                    for (i = 0; i < eof; i += 1) {
+                        s = this.settings.resize[i].breakpoint;
+                        e = eof > (i+1) ? (this.settings.resize[i+1].breakpoint - 1) : 3000;
+                        this.bwbp.push([s, e]);
+                    }
+                }
         };
 
         // A really lightweight plugin wrapper around the constructor,

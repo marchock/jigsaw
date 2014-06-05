@@ -1,4 +1,12 @@
-/* line 6, ../scss/app.scss */
+
+
+.something {
+  width: 100%;
+  position: relative;
+  margin: auto;
+}
+
+
 .container {
   width: 1400px;
   height: inherit;
