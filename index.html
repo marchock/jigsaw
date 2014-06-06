@@ -15,7 +15,7 @@
 	</head>
 	<body>
         <div class="something">
-    		<div class="container">
+    		<div class="jigsaw">
                 <div class="item largeitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
@@ -55,11 +55,13 @@
 
 
             $( document ).ready(function() {
-                $(".container").jigsaw({
+
+                
+                $(".jigsaw").jigsaw({
 
                     getDataFrom: "html",
 
-                    getWidthFrom: ".something",
+                    getWidthFrom: "",
 
                     tile: [
                         {
@@ -88,7 +90,6 @@
                         },
 
                         {
-
                             breakpoint: 1200,
                             tileWidth: 250,
                             tileSpace: 14

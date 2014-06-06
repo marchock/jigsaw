@@ -42,35 +42,15 @@
 
                 defaults = {
 
-                    data: "html",
+                    getDataFrom: "html",
 
-                    tileWidth: 0,
-
-                    spacing: 0,
+                    getWidthFrom: "",
 
                     tile: {},
 
+                    resize: {},
 
-                    // tile: {
-
-                    //     className: ".item",
-
-                    //     size: [
-                    //         {
-                    //             name: "smallitem",
-                    //             size: [1, 1]
-                    //         },
-                    //         {
-                    //             name: "largeitem",
-                    //             size: [2, 2]
-                    //         }
-                    //     ]
-                    // }
-
-
-                    url: "",
-
-                    demo: false
+                    resizeIndex: 0
         };
 
         // The actual plugin constructor
@@ -203,11 +183,7 @@
 
                 solveJigsaw: function () {
 
-                    var testTemplate = demoTiles,
-                        i = 0,
-                        eof = this.eof,
-                        x,  
-                        y;
+                    var i = 0;
 
 
                     // reset number of tiles
@@ -216,7 +192,7 @@
                     // a browser resize will not need to create more tiles 
                     // there for tiles will only be created when addMoreTiles method
                     // has been triggered
-                    if (this.tiles.length < eof) {
+                    if (this.tiles.length < this.eof) {
 
 
                     } else {
@@ -246,6 +222,10 @@
                     this.build();
                 },
 
+
+
+
+
                 build: function () {
 
                     var i = 0,
@@ -257,7 +237,7 @@
                     /*
                      * search grid array for empty spaces to fit tiles
                      */
-                    for (i=0; i < this.numOfTiles; i += 1) {
+                    for (i = 0; i < this.numOfTiles; i += 1) {
 
                         
                         addTile = true;
@@ -283,7 +263,7 @@
 
                             // if (this.tiles[tc].created) {
 
-                            //     if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
+                            //     if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
                             //         this.updateGrid(this.tiles[tc].className, acR, acC);
                             //     } else {
                             //         addTile = false;
@@ -307,8 +287,7 @@
                              */
                             if (this.isTileCreated(tc, 2, 2)) {
 
-
-                                if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
+                                if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
 
                                     this.updateGrid(this.tiles[tc].className, acR, acC); 
 
@@ -326,7 +305,7 @@
                             } else if (this.isTileCreated(tc, 2, 1)) {
 
 
-                                if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
+                                if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
 
                                     this.updateGrid(this.tiles[tc].className, acR, acC); 
 
@@ -345,7 +324,7 @@
 
 
 
-                                if (this.gridHasSpace(this.tiles[tc].className, acR, acC)) {
+                                if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
                                     this.updateGrid(this.tiles[tc].className, acR, acC);
                                 } else {
                                     addTile = false;
@@ -423,6 +402,7 @@
                         if (tc < this.stopPoint && i >= (this.numOfTiles - 1)) {
 
                             if (this.grid.length === acR) {
+
                                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
                             }
 
@@ -487,7 +467,7 @@
 
                             // check grid space available goes here 
 
-                            if (this.gridHasSpace(this.tiles[c].className, acR, acC)) {
+                            if (this.gridHasSpace(this.tiles[c].w, this.tiles[c].h, acR, acC)) {
 
                                 this.updateGrid(this.tiles[c].className, acR, acC);
                                 this.tiles[c].created = true;
@@ -498,7 +478,7 @@
 
                         } else if (this.tiles[c].w === 2 && !this.tiles[c].created) {
 
-                            if (this.gridHasSpace(this.tiles[c].className, acR, acC)) {
+                            if (this.gridHasSpace(this.tiles[c].w, this.tiles[c].h, acR, acC)) {
 
                                 this.updateGrid(this.tiles[c].className, acR, acC);
                                 this.tiles[c].created = true;
@@ -537,67 +517,108 @@
                 },
 
 
-                gridHasSpace: function (string, row, column) {
-                    var b = false;
+                gridHasSpace: function (w, h, row, column) {
 
-                    switch(string) {
-                        case "box-1-1":
+                    var b = true,
+                        i = 0,
+                        ii = 0;
 
-                            // 1 0
-                            // 0 0
+                    for (i = 0; i < h; i += 1) {
 
-                            b = true;
-                          
-                          break;
-                        case "box-2-1":
+                        for (ii = 0; ii < w; ii += 1) {
 
-                            // 1 1
-                            // 0 0
+                            if((column + ii) < this.cols) {
 
-                            if (!this.grid[row][column + 1] &&
-                                (column + 1) < this.cols) {
+                                // Add another grid row if required to fit tile
+                                if (this.grid.length <= (row + i)) {
+                                    this.grid[this.grid.length] = this.setArrayLength(this.cols)
+                                }
 
-                                b = true;
+                                if (!this.grid[row + i][column + ii]) {
+                                    b = true;
+
+                                } else {
+                                    b = false;
+                                    break;
+                                }
+
+                            } else {
+                                b = false;
+                                break;
                             }
-                          
-                          break;
-                        case "box-1-2":
+                        }
 
-                            // 1 0
-                            // 1 0
-
-                            if (this.grid.length === (row + 1)) {
-
-                                this.grid[this.grid.length] = this.setArrayLength(this.cols)
-                            }
-
-                            if (!this.grid[row + 1][column]) {
-                                b = true;
-                            }
-                          
-                          break;
-                        case "box-2-2":
-
-                            // 1 1
-                            // 1 1
-
-                            if (this.grid.length === (row + 1)) {
-
-                                this.grid[this.grid.length] = this.setArrayLength(this.cols)
-                            }
-
-                            if (!this.grid[row][column + 1] &&
-                                !this.grid[row + 1][column] &&
-                                !this.grid[row + 1][column + 1] &&
-                                (column + 1) < this.cols) {
-
-                                b = true;
-                            }
-                          break;
+                        if (!b) {
+                            break;
+                        }
                     }
 
-                        return b;
+
+                    return b;
                 },
+
+
+                // gridHasSpace2: function (string, row, column) {
+                //     var b = false;
+
+                //     switch(string) {
+                //         case "box-1-1":
+
+                //             // 1 0
+                //             // 0 0
+
+                //             b = true;
+                          
+                //           break;
+                //         case "box-2-1":
+
+                //             // 1 1
+                //             // 0 0
+
+                //             if (!this.grid[row][column + 1] &&
+                //                 (column + 1) < this.cols) {
+
+                //                 b = true;
+                //             }
+                          
+                //           break;
+                //         case "box-1-2":
+
+                //             // 1 0
+                //             // 1 0
+
+                //             if (this.grid.length === (row + 1)) {
+
+                //                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
+                //             }
+
+                //             if (!this.grid[row + 1][column]) {
+                //                 b = true;
+                //             }
+                          
+                //           break;
+                //         case "box-2-2":
+
+                //             // 1 1
+                //             // 1 1
+
+                //             if (this.grid.length === (row + 1)) {
+
+                //                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
+                //             }
+
+                //             if (!this.grid[row][column + 1] &&
+                //                 !this.grid[row + 1][column] &&
+                //                 !this.grid[row + 1][column + 1] &&
+                //                 (column + 1) < this.cols) {
+
+                //                 b = true;
+                //             }
+                //           break;
+                //     }
+
+                //         return b;
+                // },
 
                 updateGrid: function (string, row, column) {
 
@@ -683,7 +704,6 @@
                 },
 
 
-
                 setArrayLength: function (c) {
                     var a = [];
                     for (i=0; i < c; i += 1) {
@@ -707,6 +727,8 @@
                         w = $(window).width();
                     }
 
+                    w = w > this.settings.resize[0].breakpoint ? w : this.settings.resize[0].breakpoint;
+
                     return w;
                 },
 
@@ -725,9 +747,9 @@
                         eof = grid.length;
 
                     for (i = 0; i < eof; i += 1) {
-                       //console.log(grid[i]) 
+                       console.log(grid[i]) 
                     }
-                    //console.log("-----------------------------------------------");
+                    console.log("-----------------------------------------------");
                 },
 
 
@@ -842,7 +864,6 @@
                             this.bwbp[i][0] < w) {
 
                             this.settings.resizeIndex = i;
-
                         }
                     }
 
@@ -866,9 +887,11 @@
                         w = me.getWidth();
 
                         if (breakpoints[0] < w) {
+
                             me.browserResized();
 
-                        } else if (breakpoints[1] > w) {
+                        } else if (breakpoints[1] > w && w > me.settings.resize[0].breakpoint) {
+
                             me.browserResized();
                         }
 
