@@ -1,7 +1,9 @@
 
+//https://github.com/jquery-boilerplate/jquery-boilerplate/wiki/How-to-publish-a-plugin-in-jQuery-Plugin-Registry
+
 // ------------------------------------------------------------------------
 
- // TODO LATER 
+ // TODO 
 
 
 
@@ -128,6 +130,8 @@
 
                     this.startLoop = 0;
 
+                    this.largestTileWidth = 0;
+
 
                     for (i = 0; i < this.tileElements.length; i += 1) {
 
@@ -141,7 +145,9 @@
 
                                 this.tiles.push(this.tileTemplate(x, y));
 
-                                this.tileCounter += (x * y)
+                                this.tileCounter += (x * y);
+
+                                this.largestTileWidth = this.largestTileWidth < x ? x : this.largestTileWidth; 
                             }
                         }
                     }
@@ -201,10 +207,17 @@
 
                         for (i = 0; i < this.tiles.length; i += 1) {
                             this.tiles[i].created = false;
+                            this.tiles[i].display = "block";
                         }
 
                         this.grid = [];
                     }
+
+                    // set tile options 
+                    this.tileOptions({option: this.settings.tileOption});
+
+
+                    
 
                     // calculate the number of rows
                     this.rows = Math.round(this.numOfTiles / this.cols);
@@ -219,11 +232,77 @@
                         }
                     }
 
+                    //console.log(this.grid, this.tiles, this.cols, this.numOfTiles, this.tileCounter)
+
                     this.build();
                 },
 
 
+                removeTilesFromArray: function () {
+                    var w = this.getWidth();
 
+                    for (i = 0; i < this.tiles.length; i += 1) {
+                        if ((this.tiles[i].w * this.settings.tileWidth) > w) {
+                            this.tiles[i].display = "none";
+                        }
+                    }
+                },
+
+                setMinNumOfCols: function () {
+
+                    // if width is less than largest tile width then extend columns
+
+                    var w = this.getWidth(),
+                        eof = this.largestTileWidth,
+                        i = 0;
+
+                    for (i = 0; i <= eof; i += 1) {
+
+                        if (w < (this.settings.tileWidth * i)) {    
+                            this.cols += 1;
+                        }
+                    }
+
+                    console.log("setMinNumOfCols", this.cols)
+                },
+
+
+                tileOptions: function (obj) {
+                    var b = false;
+
+                    if (obj.option === "gridLock") { // GRID LOCK
+
+                        // option 1 - if tile width is greater than grid then extend grid
+                        this.setMinNumOfCols();
+
+
+                    } else if (obj.option === "resize") { // RESIZE
+
+                        // option 2 - resize tile to fit grid width
+
+                            b = true;
+
+                    } else if (obj.option === "remove") { //REMOVE
+
+                        // option 3 -- remove tile from build
+
+                        if (obj.option === this.settings.tileOption) {
+
+                            if (obj.index) {
+                                if (this.tiles[obj.index].display !== "none") {
+                                    b = true;
+                                }
+
+                            } else {
+                                this.removeTilesFromArray();
+                            }
+                        } else {
+                            b = true;
+                        }
+                    }
+
+                    return b;
+                },
 
 
                 build: function () {
@@ -238,129 +317,41 @@
                      * search grid array for empty spaces to fit tiles
                      */
                     for (i = 0; i < this.numOfTiles; i += 1) {
-
                         
                         addTile = true;
+
 
 
                         // if grid position is false then space is available for a tile 
                         if (!this.grid[acR][acC]) {
 
-                            // is tile created 
-                            // check if tile can fit in grid
-                            // true then create tile
-                            // false search for tile to fit.
 
-
-// ************************************************************************************
-
-
-// use this code to rework BUILD method
-
-// should be able to add a tiles of any size to grid 
-
-
-
-                            // if (this.tiles[tc].created) {
-
-                            //     if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
-                            //         this.updateGrid(this.tiles[tc].className, acR, acC);
-                            //     } else {
-                            //         addTile = false;
-                            //         this.searchForTile(tc, acR, acC);
-                            //     }
-                            // else {
-                            //         addTile = false;
-                            //         this.searchForTile(tc, acR, acC);
-                            // }
-
-
-
-
-// ************************************************************************************
-
-
-                            /*
-                             * 2 X 2 TILE
-                             *
-                             * has this tile been created and can it fit in grid current position 
-                             */
-                            if (this.isTileCreated(tc, 2, 2)) {
+                            if (this.tileOptions({option: "remove", index: tc}) && !this.tiles[tc].created) {
 
                                 if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
 
-                                    this.updateGrid(this.tiles[tc].className, acR, acC); 
+                                    this.updateGrid(this.tiles[tc].w, this.tiles[tc].h, acR, acC); 
 
-                                } else {
-
-                                    addTile = false;
-                                    this.searchForTile(tc, acR, acC);
-                                }
-
-
-
-                            /*
-                             * 2 X 1 TILE  
-                             */
-                            } else if (this.isTileCreated(tc, 2, 1)) {
-
-
-                                if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
-
-                                    this.updateGrid(this.tiles[tc].className, acR, acC); 
-
-                                } else {
-
-                                    addTile = false;
-                                    this.searchForTile(tc, acR, acC);
-                                }
-
-
-
-                            /*
-                             * 1 X 2 TILE  
-                             */
-                            } else if (this.isTileCreated(tc, 1, 2)) {
-
-
-
-                                if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
-                                    this.updateGrid(this.tiles[tc].className, acR, acC);
                                 } else {
                                     addTile = false;
                                     this.searchForTile(tc, acR, acC);
                                 }
 
-
-
-                            /*
-                             * 1 X 1 TILE  
-                             */
-                            } else if (this.isTileCreated(tc, 1, 1)) {
-
-                                this.updateGrid(this.tiles[tc].className, acR, acC); 
-
-
-
-                            /*
-                             * Tile created 
-                             */
-                            } else if (this.tiles[tc].created) {
+                            } else {
 
                                 addTile = false;
                                 tc += 1;
                                 this.searchForTile(tc, acR, acC);
+
                             }
 
 
-                            if (addTile) {
-                                if (this.tiles[tc].className) {
-                                    //this.createTile(this.tiles[tc].className, acC, acR, this.tiles[tc], tc);
-                                    //this.tiles[tc].created = true;
-                                    this.updateTile(tc, acR, acC);
 
-                                    tc += 1;
-                                }
+
+                            if (addTile) {
+
+                                this.updateTile(tc, acR, acC);
+                                tc += 1;
                             }
                         }
 
@@ -368,7 +359,7 @@
                          * Update array counters 
                          *
                          * tracks the position of the grid by row and column 
-                         * starts from left to right and then down left to start again
+                         * starts from left to right
                          */
                         if (acC < this.cols-1) {
                             acC += 1;
@@ -392,7 +383,7 @@
                         if (!this.tiles[tc] || tc === this.stopPoint) {
 
                             this.updateHTMLElements();
-
+                            
                             break;
                         }
 
@@ -411,9 +402,12 @@
                     }
 
 
-                    // Apply height to container
+                    this.removeEmptyRowsFromGrid();
+
+                },
 
 
+                removeEmptyRowsFromGrid: function () {
                     var c, ii, d = [];
                     // search rows for empty columns 
                     for (i = 0; i < this.grid.length; i += 1) {
@@ -444,14 +438,30 @@
 
                 updateHTMLElements: function () {
                     var i = 0;
-                        eof = this.tileElements.length;
+                        eof = this.tileElements.length,
+                        w = 0;
 
                     for (i = 0; i < eof; i += 1) {
 
-                        this.tileElements[i].style.width = this.tiles[i].cssWidth + "px";
+
+                        w = this.tiles[i].cssWidth;
+
+
+
+                        // RESIZE TILE OPTION --------------------------------------------
+                        if (w > this.getWidth() && this.tileOptions({option: "resize"})) {
+
+                            w = (this.settings.tileWidth * this.cols) - this.settings.spacing;
+
+                        } 
+
+
+
+                        this.tileElements[i].style.width = w + "px";
                         this.tileElements[i].style.height = this.tiles[i].cssHeight + "px";
                         this.tileElements[i].style.left = this.tiles[i].l + "px";
                         this.tileElements[i].style.top = this.tiles[i].t + "px";
+                        this.tileElements[i].style.display = this.tiles[i].display;
                         this.tileElements[i].innerHTML = i
                     }
                 },
@@ -463,29 +473,16 @@
 
                     for (c = c; c < this.tiles.length; c += 1) {
 
-                        if (this.tiles[c].w === 1 && !this.tiles[c].created) {
-
-                            // check grid space available goes here 
+                        if (this.tileOptions({option: "remove", index: c}) && !this.tiles[c].created) {
 
                             if (this.gridHasSpace(this.tiles[c].w, this.tiles[c].h, acR, acC)) {
 
-                                this.updateGrid(this.tiles[c].className, acR, acC);
-                                this.tiles[c].created = true;
+                                this.updateGrid(this.tiles[c].w, this.tiles[c].h, acR, acC);
                                 this.updateTile(c, acR, acC);
 
                                 break;
                             }
 
-                        } else if (this.tiles[c].w === 2 && !this.tiles[c].created) {
-
-                            if (this.gridHasSpace(this.tiles[c].w, this.tiles[c].h, acR, acC)) {
-
-                                this.updateGrid(this.tiles[c].className, acR, acC);
-                                this.tiles[c].created = true;
-                                this.updateTile(c, acR, acC);
-
-                                break;
-                            }
                         }
                     }
                 },
@@ -517,11 +514,46 @@
                 },
 
 
+                shrink: function (w) {
+
+                    var width = this.getWidth(),
+                        eof = this.largestTileWidth,
+                        i = 0,
+                        tw = w;
+
+                        for (i = 0; i <= w; i += 1) {
+
+                            if (width < (this.settings.tileWidth * i)) {
+                                tw -= 1;
+
+                                
+                            }
+                        }
+
+                        return tw;     
+                },
+
+
                 gridHasSpace: function (w, h, row, column) {
 
                     var b = true,
                         i = 0,
                         ii = 0;
+
+
+                    // RESIZE TILE OPTION --------------------------------------------
+
+                    if (this.settings.tileOption === "resize") {
+
+                        if ((this.settings.tileWidth * w) > this.getWidth()) {
+
+                             w = this.shrink(w);
+
+                        } 
+                    }
+                    // RESIZE TILE OPTION --------------------------------------------
+
+
 
                     for (i = 0; i < h; i += 1) {
 
@@ -529,7 +561,7 @@
 
                             if((column + ii) < this.cols) {
 
-                                // Add another grid row if required to fit tile
+                                // Add another grid row to fit tile
                                 if (this.grid.length <= (row + i)) {
                                     this.grid[this.grid.length] = this.setArrayLength(this.cols)
                                 }
@@ -543,123 +575,46 @@
                                 }
 
                             } else {
+
                                 b = false;
                                 break;
                             }
                         }
 
-                        if (!b) {
-                            break;
-                        }
+                        // if false stop for loop
+                        if (!b) { break; }
                     }
-
 
                     return b;
                 },
 
 
-                // gridHasSpace2: function (string, row, column) {
-                //     var b = false;
+                updateGrid: function (w, h, row, column) {
 
-                //     switch(string) {
-                //         case "box-1-1":
+                    // RESIZE TILE OPTION --------------------------------------------
 
-                //             // 1 0
-                //             // 0 0
+                    if (this.settings.tileOption === "resize") {
 
-                //             b = true;
-                          
-                //           break;
-                //         case "box-2-1":
+                        if ((this.settings.tileWidth * w) > this.getWidth()) {
+                             w = this.shrink(w);
+                        } 
+                    }
+                    // RESIZE TILE OPTION --------------------------------------------
 
-                //             // 1 1
-                //             // 0 0
 
-                //             if (!this.grid[row][column + 1] &&
-                //                 (column + 1) < this.cols) {
 
-                //                 b = true;
-                //             }
-                          
-                //           break;
-                //         case "box-1-2":
 
-                //             // 1 0
-                //             // 1 0
 
-                //             if (this.grid.length === (row + 1)) {
 
-                //                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
-                //             }
+                    var i = 0,
+                        ii = 0;
 
-                //             if (!this.grid[row + 1][column]) {
-                //                 b = true;
-                //             }
-                          
-                //           break;
-                //         case "box-2-2":
+                    for (i = 0; i < h; i += 1) {
 
-                //             // 1 1
-                //             // 1 1
+                        for (ii = 0; ii < w; ii += 1) {
 
-                //             if (this.grid.length === (row + 1)) {
-
-                //                 this.grid[this.grid.length] = this.setArrayLength(this.cols)
-                //             }
-
-                //             if (!this.grid[row][column + 1] &&
-                //                 !this.grid[row + 1][column] &&
-                //                 !this.grid[row + 1][column + 1] &&
-                //                 (column + 1) < this.cols) {
-
-                //                 b = true;
-                //             }
-                //           break;
-                //     }
-
-                //         return b;
-                // },
-
-                updateGrid: function (string, row, column) {
-
-                    switch(string) {
-                        case "box-1-1":
-
-                            // 1 0
-                            // 0 0
-
-                            this.grid[row][column] = 1;
-                          
-                          break;
-                        case "box-2-1":
-
-                            // 1 1
-                            // 0 0
-
-                            this.grid[row][column] = 1;
-                            this.grid[row][column + 1] = 1;
-                          
-                          break;
-                        case "box-1-2":
-
-                            // 1 0
-                            // 1 0
-
-                            this.grid[row][column] = 1;
-                            this.grid[row + 1][column] = 1;
-                          
-                          break;
-                        case "box-2-2":
-
-                            // 1 1
-                            // 1 1
-
-                            this.grid[row][column] = 1;
-                            this.grid[row][column + 1] = 1;
-                            this.grid[row + 1][column] = 1;
-                            this.grid[row + 1][column + 1] = 1;
-
-                          break;
+                            this.grid[row + i][column + ii] = 1;
+                        }
                     }
                 },
 
@@ -699,7 +654,8 @@
                         cssWidth: 0,
                         cssHeight: 0,
                         className: "box-" + w + "-" + h,
-                        created: false
+                        created: false,
+                        display: "block"
                     }
                 },
 

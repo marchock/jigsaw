@@ -56,12 +56,14 @@
 
             $( document ).ready(function() {
 
-                
+
                 $(".jigsaw").jigsaw({
 
                     getDataFrom: "html",
 
                     getWidthFrom: "",
+
+                    tileOption: "remove",
 
                     tile: [
                         {
@@ -71,14 +73,19 @@
                         },
                         {
                             classname: "largeitem",
-                            w: 2,
+                            w: 4,
                             h: 2
                         }
                     ],
 
                     resize: [
+                        // {
+                        //     breakpoint: 160,
+                        //     tileWidth: 80,
+                        //     tileSpace: 2
+                        // },
                         {
-                            breakpoint: 320,
+                            breakpoint: 160,
                             tileWidth: 160,
                             tileSpace: 4
                         },
