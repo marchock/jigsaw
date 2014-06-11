@@ -179,6 +179,63 @@
                 },
 
 
+
+                /************************************************************************************
+                 * Tile Options
+                 *
+                 *
+                 *
+                 *
+                 *************************************************************************************/
+                tileOptionGridLock: function () {
+                    this.setMinNumOfCols();
+                },
+
+                tileOptionResize: function (string, w) {
+
+                    if (this.settings.tileOption === "Resize") {
+
+                        var width = this.getWidth();
+
+                        switch(string) {
+                            case "html":
+
+                                if (w > width) {
+                                    w = (this.settings.tileWidth * this.cols) - this.settings.spacing;
+                                } 
+                                break;
+
+                            case "grid":
+
+                                if ((this.settings.tileWidth * w) > width) {
+                                     w = this.shrink(w);
+                                } 
+                                break;
+                        }
+                    }
+ 
+                    return w;
+                },
+
+
+
+                tileOptionRemove: function (index) {
+                    var b = false;
+
+                    if (index >= 0) {
+
+                        if (this.tiles[index].display !== "none") {
+                            b = true;
+                        }
+
+                    } else {
+                        this.removeLargeTiles();
+                    }
+
+                    return b;
+                },
+
+
                 /************************************************************************************
                  * Construct tile param data
                  *
@@ -214,7 +271,7 @@
                     }
 
                     // set tile options 
-                    this.tileOptions({option: this.settings.tileOption});
+                    this["tileOption" + this.settings.tileOption]();
 
 
                     
@@ -232,13 +289,11 @@
                         }
                     }
 
-                    //console.log(this.grid, this.tiles, this.cols, this.numOfTiles, this.tileCounter)
-
                     this.build();
                 },
 
 
-                removeTilesFromArray: function () {
+                removeLargeTiles: function () {
                     var w = this.getWidth();
 
                     for (i = 0; i < this.tiles.length; i += 1) {
@@ -262,46 +317,6 @@
                             this.cols += 1;
                         }
                     }
-
-                    console.log("setMinNumOfCols", this.cols)
-                },
-
-
-                tileOptions: function (obj) {
-                    var b = false;
-
-                    if (obj.option === "gridLock") { // GRID LOCK
-
-                        // option 1 - if tile width is greater than grid then extend grid
-                        this.setMinNumOfCols();
-
-
-                    } else if (obj.option === "resize") { // RESIZE
-
-                        // option 2 - resize tile to fit grid width
-
-                            b = true;
-
-                    } else if (obj.option === "remove") { //REMOVE
-
-                        // option 3 -- remove tile from build
-
-                        if (obj.option === this.settings.tileOption) {
-
-                            if (obj.index) {
-                                if (this.tiles[obj.index].display !== "none") {
-                                    b = true;
-                                }
-
-                            } else {
-                                this.removeTilesFromArray();
-                            }
-                        } else {
-                            b = true;
-                        }
-                    }
-
-                    return b;
                 },
 
 
@@ -325,8 +340,7 @@
                         // if grid position is false then space is available for a tile 
                         if (!this.grid[acR][acC]) {
 
-
-                            if (this.tileOptions({option: "remove", index: tc}) && !this.tiles[tc].created) {
+                            if (this["tileOptionRemove"](tc) && !this.tiles[tc].created) {
 
                                 if (this.gridHasSpace(this.tiles[tc].w, this.tiles[tc].h, acR, acC)) {
 
@@ -342,10 +356,7 @@
                                 addTile = false;
                                 tc += 1;
                                 this.searchForTile(tc, acR, acC);
-
                             }
-
-
 
 
                             if (addTile) {
@@ -376,7 +387,6 @@
                                     this.grid[this.grid.length] = this.setArrayLength(this.cols)
                                 }
                             }
-
                         }
 
 
@@ -435,45 +445,13 @@
                     //this.animateTiles($(".tile"));
                 },
 
-
-                updateHTMLElements: function () {
-                    var i = 0;
-                        eof = this.tileElements.length,
-                        w = 0;
-
-                    for (i = 0; i < eof; i += 1) {
-
-
-                        w = this.tiles[i].cssWidth;
-
-
-
-                        // RESIZE TILE OPTION --------------------------------------------
-                        if (w > this.getWidth() && this.tileOptions({option: "resize"})) {
-
-                            w = (this.settings.tileWidth * this.cols) - this.settings.spacing;
-
-                        } 
-
-
-
-                        this.tileElements[i].style.width = w + "px";
-                        this.tileElements[i].style.height = this.tiles[i].cssHeight + "px";
-                        this.tileElements[i].style.left = this.tiles[i].l + "px";
-                        this.tileElements[i].style.top = this.tiles[i].t + "px";
-                        this.tileElements[i].style.display = this.tiles[i].display;
-                        this.tileElements[i].innerHTML = i
-                    }
-                },
-
-
                 searchForTile: function (index, acR, acC) {
                     // search for a tile to fit inside grid position row and column
                     var c = index;
 
                     for (c = c; c < this.tiles.length; c += 1) {
 
-                        if (this.tileOptions({option: "remove", index: c}) && !this.tiles[c].created) {
+                        if (this["tileOptionRemove"](c) && !this.tiles[c].created) {
 
                             if (this.gridHasSpace(this.tiles[c].w, this.tiles[c].h, acR, acC)) {
 
@@ -525,8 +503,6 @@
 
                             if (width < (this.settings.tileWidth * i)) {
                                 tw -= 1;
-
-                                
                             }
                         }
 
@@ -542,17 +518,7 @@
 
 
                     // RESIZE TILE OPTION --------------------------------------------
-
-                    if (this.settings.tileOption === "resize") {
-
-                        if ((this.settings.tileWidth * w) > this.getWidth()) {
-
-                             w = this.shrink(w);
-
-                        } 
-                    }
-                    // RESIZE TILE OPTION --------------------------------------------
-
+                    w = this.tileOptionResize("grid", w);
 
 
                     for (i = 0; i < h; i += 1) {
@@ -592,19 +558,7 @@
                 updateGrid: function (w, h, row, column) {
 
                     // RESIZE TILE OPTION --------------------------------------------
-
-                    if (this.settings.tileOption === "resize") {
-
-                        if ((this.settings.tileWidth * w) > this.getWidth()) {
-                             w = this.shrink(w);
-                        } 
-                    }
-                    // RESIZE TILE OPTION --------------------------------------------
-
-
-
-
-
+                    w = this.tileOptionResize("grid", w);
 
                     var i = 0,
                         ii = 0;
@@ -618,6 +572,78 @@
                     }
                 },
 
+
+                /************************************************************************************
+                 * HTML ELEMENTS 
+                 *
+                 *
+                 *
+                 *
+                 *************************************************************************************/
+
+                updateHTMLElements: function () {
+                    var i = 0;
+                        eof = this.tileElements.length,
+                        w = 0;
+
+                    for (i = 0; i < eof; i += 1) {
+
+                        // RESIZE TILE OPTION --------------------------------------------
+                        w = this.tileOptionResize("html", this.tiles[i].cssWidth);
+
+                        this.tileElements[i].style.width = w + "px";
+                        this.tileElements[i].style.height = this.tiles[i].cssHeight + "px";
+                        this.tileElements[i].style.left = this.tiles[i].l + "px";
+                        this.tileElements[i].style.top = this.tiles[i].t + "px";
+                        this.tileElements[i].style.display = this.tiles[i].display;
+                        this.tileElements[i].innerHTML = i;
+
+
+                        $(this.tileElements[i]).addClass("animate");
+                    }
+
+                    if (!this.firstLoad) {
+                        this.animationCounter = 0;
+                        this.animationController();
+                        this.firstLoad = true;
+                    }
+
+                },
+
+
+                animationController: function () {
+
+                    if (this.animationCounter < this.tileElements.length) {
+
+                        this.jigsawTimer(1000 / this.settings.animate.frameRate);
+
+                    } else {
+                        // animation completed
+
+                    }
+
+                    
+                },
+
+ 
+                addClassToTiles: function () {
+
+                    $(this.tileElements[this.animationCounter]).addClass("start");
+                    this.animationCounter += 1;
+                    this.animationController();
+                },
+
+                jigsawTimer: function (time) {
+                    clearTimeout(this.jTimer);
+                    var me = this;
+
+                    this.jTimer = setTimeout(function () {
+
+                        me.addClassToTiles();
+
+                    }, time);
+                },
+
                 /************************************************************************************
                  * support methods 
                  *
@@ -629,7 +655,6 @@
                 setupEvents: function () {
 
                     $(".load-more").click(function () {
-                        //console.log("YEAH WORKING")
                         //that.stopPoint = 40;
                         that.addMoreTiles();
                     });
@@ -800,15 +825,24 @@
                     breakpoints.push(w + 1);
                     breakpoints.push(w - 1);
 
-                    // update containing element width
-                    this.updateElementWidth(this.cols * this.settings.tileWidth)
 
-                    // reset start loop to zero 
-                    this.startLoop = 0;
+                    // NOTE --- FIRST LOAD
 
-                    this.solveJigsaw();
+                    // the first get width is the width of the window without scroll bar 
+                    // when listenForBrowserResize is triggered then width is different and 
+                    // triggers another  browser resize. 
 
+                        // update containing element width
+                        this.updateElementWidth(this.cols * this.settings.tileWidth);
+
+                        // reset start loop to zero 
+                        this.startLoop = 0;
+
+                        this.solveJigsaw();
+
+                    
                     this.listenForBrowserResize(breakpoints);
+
                 },
 
 
