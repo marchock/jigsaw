@@ -12,7 +12,7 @@
     background-color: #DDD;
     margin: auto;
     position: relative;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .jigsaw > div {
@@ -22,6 +22,7 @@
     font-family: arial; 
     opacity: 1;
     background-color: red;
+    display: none;
 }
 
 .jigsaw .item.animate {
