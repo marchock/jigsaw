@@ -5,18 +5,7 @@
 
  // TODO 
 
-
-
-// animate tiles 
-
-// click on a tile and the tile will cover the entire screen (animated in and out )
-
 // create an object data template 
-
-// clicking on load more - if there are more tiles to load on not
-
-// scrolling down to the end will load more tiles (create as an option)
-
 
 // comment code descriptively as possible 
 
@@ -45,9 +34,11 @@
 
             resizeIndex: 0,
 
-            loadNumOfTiles: 10,
+            loadNumOfTiles: null,
 
-            animate: false
+            animate: false,
+
+            classname: "item"
         };
 
     // The actual plugin constructor
@@ -85,37 +76,28 @@
 
             this.animationCounter = 0;
 
+            this.pageNum = 2;
 
 
-            switch (this.settings.getDataFrom) {
-            case "html":
-                this.getTilesDataFromHTML();
-
-                break;
-
-            case "obj":
-                this.buildTilesData();
-
-                break;
-            }
 
             this.createBrowserWidthBreakPoints();
-            this.browserResized();
             this.setupEvents();
 
 
 
-            //$( "body" ).load( "html/page-1.html" );
+            switch (this.settings.getDataFrom) {
 
+            case "html-paging":
+            case "html-static":
+                this.getTilesDataFromHTML();
 
-            $.get( "html/page-1.html", function( data ) {
-                console.log(data)
-              // $( ".result" ).html( data );
-              // alert( "Load was performed." );
-            });
+                break;
 
+            case "json":
+                this.getTileDataFromJSON();
 
-
+                break;
+            }
         },
 
 
@@ -129,7 +111,6 @@
          *************************************************************************************/
 
 
-         // TODO --- HTML --- load a specific number of tiles and then load the next specific number 
 
 
          // JSON - load data from ajax request, load another specific number of tiles from AJAX request 
@@ -138,18 +119,14 @@
 
         getTilesDataFromHTML: function () {
 
+            this.tiles = [];
+
             var i = 0,
                 ii = 0,
                 x = 0,
                 y = 0;
 
             this.tileElements = $(this.element).children();
-
-            this.stopPoint = this.settings.loadNumOfTiles; //this.tileElements.length;
-
-            this.eof = this.settings.loadNumOfTiles;//this.tileElements.length;
-
-            this.startLoop = 0;
 
             this.largestTileWidth = 0;
 
@@ -166,42 +143,68 @@
 
                         this.tiles.push(this.tileTemplate(x, y));
 
-                        //this.tileCounter += (x * y);
+                        // this.tileCounter += (x * y);
 
                         this.largestTileWidth = this.largestTileWidth < x ? x : this.largestTileWidth;
+
+                        break;
                     }
                 }
             }
+
+            //this.eof = this.settings.loadNumOfTiles || this.tileElements.length;
+            //this.stopPoint = this.settings.loadNumOfTiles || this.tileElements.length;
+
+            this.browserResized();
         },
 
 
-        buildTilesData: function () {
+        getTileDataFromJSON: function () {
 
-            // TODO --  this is broken 
+            var me = this;
 
-            var i = 0,
-                eof = 0,
-                x = 0,
-                y = 0;
+            $.getJSON( "data/tiles.json", function(data) {
+                
+                var i = 0,
+                    ii = 0,
+                    eof = data.tiles.length,
+                    x = 0,
+                    y = 0,
+                    classname;
 
-            for (i = this.startLoop; i < eof; i += 1) {
+                for (i = 0; i < eof; i += 1) {
 
-                if (this.settings.demo) {
-                    // demo || could be used for dynamic content
-                    x = testTemplate[i].x;
-                    y = testTemplate[i].y;
-                } else {
-                    // random tiles created
-                    x = this.getNum(2);
-                    y = this.getNum(2);
+                    classname = data.tiles[i].tile.classname;
+
+                    for (ii = 0; ii < me.settings.tile.length; ii += 1) {
+
+                        if (classname === me.settings.tile[ii].classname) {
+
+                            x = me.settings.tile[ii].w;
+
+                            y = me.settings.tile[ii].h;
+
+                            me.tiles.push(me.tileTemplate(x, y, classname));
+
+                            me.largestTileWidth = me.largestTileWidth < x ? x : me.largestTileWidth;
+                        }
+                    }
+
                 }
 
-                // apply tile template to tiles array
-                this.tiles[i] = this.tileTemplate(x, y);
+                console.log( "TILES", me.tiles.length);
 
-                // calculate the total number of tiles
-                this.numOfTiles += (x * y);
-            }
+
+                me.eof = me.settings.loadNumOfTiles;
+                me.stopPoint = me.settings.loadNumOfTiles;
+
+                me.createHTMLElements();
+
+            })
+            .fail(function(e) {
+                console.log( "error", e);
+            });
+
         },
 
 
@@ -303,8 +306,6 @@
             // has been triggered
 
 
-
-
             switch(string) {
             case "moreTiles":
 
@@ -323,10 +324,10 @@
                 }
 
                 this.grid = [];
-
-
                 break;
             }
+
+            console.log("numOfTiles", this.numOfTiles)
             
                 
             // set tile options 
@@ -344,6 +345,8 @@
                 }
             }
 
+
+            console.log(this.grid, this.rows, this.cols)
 
             this.build();
         },
@@ -449,7 +452,7 @@
                 if (!this.tiles[tc] || tc === this.stopPoint) {
 
                     this.updateHTMLElements();
-
+                    
                     break;
                 }
 
@@ -705,6 +708,43 @@
             }, time);
         },
 
+
+
+        /************************************************************************************
+         * create tile elements and output to HTML
+         *
+         *
+         *
+         *
+         *************************************************************************************/
+        createHTMLElements: function () {
+
+            var i = this.startLoop,
+                eof = this.stopPoint,
+                w = 0;
+
+            for (i = this.startLoop; i < eof; i += 1) {
+
+            var e = document.createElement("div");
+
+                e.setAttribute("class", this.settings.classname + " " + this.tiles[i].classname);
+                e.innerHTML = i;
+
+                this.element.appendChild(e);
+
+            }
+
+
+
+            this.tileElements = $(this.element).children();
+            //this.solveJigsaw();
+
+            this.browserResized("moreTiles");
+
+
+        },
+
+
         /************************************************************************************
          * EVENTS
          *
@@ -752,7 +792,7 @@
          *
          *
          *************************************************************************************/
-        tileTemplate: function (w, h) {
+        tileTemplate: function (w, h, classname, html) {
             return {
                 w: w,
                 h: h,
@@ -760,9 +800,10 @@
                 l: 0,
                 cssWidth: 0,
                 cssHeight: 0,
-                className: "box-" + w + "-" + h,
+                classname: classname || "",
                 created: false,
-                display: "block"
+                display: "block",
+                html: html || ""
             };
         },
 
@@ -819,85 +860,138 @@
         },
 
 
-        addMoreTiles: function () {
-
-
-            // limit the number of tiles created 
-
-            if ((this.stopPoint + this.settings.loadNumOfTiles) < this.tiles.length) {
-
-                this.stopPoint += this.settings.loadNumOfTiles;
-                
-            } else {
-
-                this.stopPoint = this.tiles.length;
-            }
-
-
-            // get end of file number
-            this.eof += this.settings.loadNumOfTiles;
-
-            // start position of loop
-
-
-            this.startLoop = this.lastStopLoopLoaded
-
-            if ((this.startLoop + this.settings.loadNumOfTiles) < this.tiles.length) {
-
-                this.startLoop += this.settings.loadNumOfTiles;
-                
-            } else {
-
-                this.startLoop = this.tiles.length;
-
-                alert("NO MORE TILES")
-
-                return; 
-            }
-
-
-            this.lastStopLoopLoaded = this.startLoop;
-
-
-
-            this.solveJigsaw("moreTiles");
-        },
-
-
-
         /************************************************************************************
-         * create tile elements and output to HTML
+         * LOADING DATA
          *
-         *
-         *
+         * HTML STATIC
+         * HTML PAGING
+         * JSON
          *
          *************************************************************************************/
-        createTile: function (cn, l, t, size) {
-            var c = document.querySelector(".container"),
-                e = document.createElement("div"),
-                i = document.createElement("img"),
-                ts = this.settings.tileWidth,
-                s = this.settings.spacing,
-                lorempixel = ["abstract", "animals", "business", "cats", "city", "food", "nightlife", "fashion", "people", "nature", "sports", "technics", "transport"],
-                num = this.getNum(10),
-                lorempixelIndex = this.getNum(lorempixel.length - 1);
+        addMoreTiles: function () {
 
-            i.src = "http://lorempixel.com/" +
-                    ((ts * size.w) - s) +
-                    "/" + ((ts * size.h) - s) + "/" + lorempixel[lorempixelIndex] + "/" + num + "/";
+            var me = this;
+
+            console.log(this.settings.getDataFrom)
+
+            switch (this.settings.getDataFrom) {
+
+            case "html-paging":
+ 
+                $.get("html/page-" + this.pageNum + ".html", function(data) {
+
+                    $(me.element).append(data);
+
+                    me.getTilesDataFromHTML();
+
+                    me.startLoop = me.eof;
+
+                    me.stopPoint = me.tiles.length;
+
+                    me.eof = me.tiles.length;
+
+                    me.solveJigsaw("moreTiles");
+
+                    me.pageNum += 1;
+
+                });
+
+                break;
 
 
-            e.setAttribute("class", cn + " tile");
-            e.setAttribute("style",
-                "top: " + (t * ts + (s / 2)) + "px;" +
-                "left: " + ((l * ts) + (s / 2)) + "px;" +
-                "width: " + ((ts * size.w) - s) + "px;" +
-                "height: " + ((ts * size.h) - s) + "px;");
 
-            //e.innerHTML = index + ": " + size.w +  " X " + size.h;
-            e.appendChild(i);
-            c.appendChild(e);
+            case "html-static":
+
+                if ((this.stopPoint + this.settings.loadNumOfTiles) < this.tiles.length) {
+
+                    this.stopPoint += this.settings.loadNumOfTiles;
+                    
+                } else {
+
+                    this.stopPoint = this.tiles.length;
+                }
+
+
+                // get end of file number
+                this.eof += this.settings.loadNumOfTiles;
+
+                // start position of loop
+                this.startLoop = this.lastStopLoopLoaded
+
+                if ((this.startLoop + this.settings.loadNumOfTiles) < this.tiles.length) {
+
+                    this.startLoop += this.settings.loadNumOfTiles;
+                    
+                } else {
+
+                    this.startLoop = this.tiles.length;
+                    alert("NO MORE TILES")
+                    return; 
+                }
+
+                this.lastStopLoopLoaded = this.startLoop;
+                this.solveJigsaw("moreTiles");
+
+
+                break;
+
+            case "json":
+
+                console.log("TILE LENGTH JSON", this.tiles.length)
+
+                if ((this.stopPoint + this.settings.loadNumOfTiles) < this.tiles.length) {
+
+                    this.stopPoint += this.settings.loadNumOfTiles;
+                    
+                } else {
+
+                    this.stopPoint = this.tiles.length;
+                }
+
+
+                // get end of file number
+                this.eof += this.settings.loadNumOfTiles;
+
+
+
+                console.log(this.stopPoint, this.startLoop, this.eof, this.tiles.length)
+
+                // start position of loop
+                this.startLoop = this.lastStopLoopLoaded
+
+                if ((this.startLoop + this.settings.loadNumOfTiles) < this.tiles.length) {
+
+                    this.startLoop += this.settings.loadNumOfTiles;
+                    
+                } else {
+
+                    this.startLoop = this.tiles.length;
+                    alert("NO MORE TILES")
+                    //return; 
+                }
+
+
+                console.log(this.stopPoint, this.startLoop, this.eof)
+
+
+                this.lastStopLoopLoaded = this.startLoop;
+
+
+                this.createHTMLElements();
+
+
+              break;
+            default:
+
+
+
+
+
+
+            }
         },
+
+
 
 
         /************************************************************************************
@@ -907,7 +1001,7 @@
          * 
          *
          *************************************************************************************/
-        browserResized: function () {
+        browserResized: function (option) {
 
             clearInterval(this.interval);
 
@@ -934,7 +1028,7 @@
             // reset start loop to zero 
             //this.startLoop = 0;
 
-            this.solveJigsaw("browserResize");
+            this.solveJigsaw(option || "browserResize");
 
             this.listenForBrowserResize(breakpoints);
         },

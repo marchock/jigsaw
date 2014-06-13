@@ -26,12 +26,14 @@
 }
 
 .jigsaw .item.animate {
-    -webkit-transition: -webkit-transform 0.1s;
-    -webkit-transform: translate3d(0, 5000px, 0);
+    -webkit-transition: opacity 0.5s;
+    opacity: 0;
+    /*-webkit-transform: translate3d(0, 5000px, 0);*/
 }
 
 .jigsaw .item.animate.start {
-    -webkit-transform: translate3d(0, 0px, 0);
+    opacity: 1;
+    /*-webkit-transform: translate3d(0, 0px, 0);*/
 }
 
 .jigsaw > div > img {
@@ -44,5 +46,6 @@
 }
 
 .load-more {
-    text-align: center; 
+    text-align: center;
+    cursor: pointer;
 }

@@ -16,7 +16,7 @@
 	<body>
         <div class="something">
     		<div class="jigsaw">
-                <div class="item largeitem"></div>
+<!--                 <div class="item largeitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
@@ -37,7 +37,7 @@
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item largeitem"></div>
-                <div class="item smallitem"></div>
+                <div class="item smallitem"></div> -->
 <!--                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
@@ -100,13 +100,13 @@
 
                 $(".jigsaw").jigsaw({
 
-                    getDataFrom: "html",
+                    getDataFrom: "json",
+
+                    loadNumOfTiles: 10,
 
                     getWidthFrom: "",
 
                     tileOption: "Resize",
-
-                    loadNumOfTiles: 20,
 
                     tile: [
                         {
@@ -117,6 +117,16 @@
                         {
                             classname: "largeitem",
                             w: 2,
+                            h: 2
+                        },
+                        {
+                            classname: "longitem",
+                            w: 2,
+                            h: 1
+                        },
+                        {
+                            classname: "tallitem",
+                            w: 1,
                             h: 2
                         }
                     ],
