@@ -5,8 +5,6 @@
 
  // TODO 
 
-// create an object data template 
-
 // comment code descriptively as possible 
 
 
@@ -24,7 +22,7 @@
 
         defaults = {
 
-            getDataFrom: "html",
+            getDataFrom: "html-static",
 
             getWidthFrom: "",
 
@@ -143,17 +141,12 @@
 
                         this.tiles.push(this.tileTemplate(x, y));
 
-                        // this.tileCounter += (x * y);
-
                         this.largestTileWidth = this.largestTileWidth < x ? x : this.largestTileWidth;
 
                         break;
                     }
                 }
             }
-
-            //this.eof = this.settings.loadNumOfTiles || this.tileElements.length;
-            //this.stopPoint = this.settings.loadNumOfTiles || this.tileElements.length;
 
             this.browserResized();
         },
@@ -163,8 +156,8 @@
 
             var me = this;
 
-            $.getJSON( "data/tiles.json", function(data) {
-                
+            $.getJSON("data/tiles.json", function(data) {
+
                 var i = 0,
                     ii = 0,
                     eof = data.tiles.length,
@@ -192,8 +185,6 @@
 
                 }
 
-                console.log( "TILES", me.tiles.length);
-
 
                 me.eof = me.settings.loadNumOfTiles;
                 me.stopPoint = me.settings.loadNumOfTiles;
@@ -201,9 +192,9 @@
                 me.createHTMLElements();
 
             })
-            .fail(function(e) {
-                console.log( "error", e);
-            });
+                .fail(function(e) {
+                    console.log("error", e);
+                });
 
         },
 
@@ -217,7 +208,6 @@
          *
          *************************************************************************************/
         tileOptionGridLock: function () {
-            console.log("GRID LOCK")
             this.setMinNumOfCols();
         },
 
@@ -306,10 +296,10 @@
             // has been triggered
 
 
-            switch(string) {
+            switch (string) {
             case "moreTiles":
 
-                console.log("Add more tiles")
+                console.log("Add more tiles");
 
                 break;
             case "browserResize":
@@ -327,9 +317,6 @@
                 break;
             }
 
-            console.log("numOfTiles", this.numOfTiles)
-            
-                
             // set tile options 
             this["tileOption" + this.settings.tileOption]();
 
@@ -344,9 +331,6 @@
                     this.grid[i] = this.setArrayLength(this.cols);
                 }
             }
-
-
-            console.log(this.grid, this.rows, this.cols)
 
             this.build();
         },
@@ -452,7 +436,7 @@
                 if (!this.tiles[tc] || tc === this.stopPoint) {
 
                     this.updateHTMLElements();
-                    
+
                     break;
                 }
 
@@ -659,18 +643,12 @@
                 if (this.settings.animate) {
                     $(this.tileElements[i]).addClass("animate");
                 }
-                
             }
 
-            // if (!this.firstLoad) {
-                //this.animationCounter = 0;
+
             if (this.settings.animate) {
                 this.animationController();
             }
-
-            
-            //this.firstLoad = true;
-            // }
         },
 
 
@@ -721,11 +699,11 @@
 
             var i = this.startLoop,
                 eof = this.stopPoint,
-                w = 0;
+                e;
 
             for (i = this.startLoop; i < eof; i += 1) {
 
-            var e = document.createElement("div");
+                document.createElement("div");
 
                 e.setAttribute("class", this.settings.classname + " " + this.tiles[i].classname);
                 e.innerHTML = i;
@@ -734,14 +712,9 @@
 
             }
 
-
-
             this.tileElements = $(this.element).children();
-            //this.solveJigsaw();
 
             this.browserResized("moreTiles");
-
-
         },
 
 
@@ -755,7 +728,6 @@
 
         setupEvents: function () {
 
-
             if (this.settings.loadMore) {
                 this.loadMoreButton();
             }
@@ -764,7 +736,6 @@
             if (this.settings.scroll) {
                 this.scrollDown();
             }
-
         },
 
         loadMoreButton: function () {
@@ -777,10 +748,10 @@
 
         scrollDown: function () {
             var me = this;
-            $(window).scroll(function () { 
-               if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-                  me.addMoreTiles();
-               }
+            $(window).scroll(function () {
+                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+                    me.addMoreTiles();
+                }
             });
         },
 
@@ -872,8 +843,6 @@
 
             var me = this;
 
-            console.log(this.settings.getDataFrom)
-
             switch (this.settings.getDataFrom) {
 
             case "html-paging":
@@ -937,8 +906,6 @@
 
             case "json":
 
-                console.log("TILE LENGTH JSON", this.tiles.length)
-
                 if ((this.stopPoint + this.settings.loadNumOfTiles) < this.tiles.length) {
 
                     this.stopPoint += this.settings.loadNumOfTiles;
@@ -952,9 +919,6 @@
                 // get end of file number
                 this.eof += this.settings.loadNumOfTiles;
 
-
-
-                console.log(this.stopPoint, this.startLoop, this.eof, this.tiles.length)
 
                 // start position of loop
                 this.startLoop = this.lastStopLoopLoaded
@@ -970,24 +934,11 @@
                     //return; 
                 }
 
-
-                console.log(this.stopPoint, this.startLoop, this.eof)
-
-
                 this.lastStopLoopLoaded = this.startLoop;
-
 
                 this.createHTMLElements();
 
-
               break;
-            default:
-
-
-
-
-
-
             }
         },
 
