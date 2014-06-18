@@ -64,10 +64,10 @@
 
 
             // limit the number of tiles created 
-            this.stopPoint = 20;
+            this.stopPoint = this.settings.loadNumOfTiles;
 
             // get end of file number
-            this.eof = 20;
+            this.eof = this.settings.loadNumOfTiles;
 
             this.startLoop = 0;
             this.lastStopLoopLoaded = 0;
@@ -76,14 +76,37 @@
 
             this.pageNum = 2;
 
+            // TODO: rework this in the code 
+            this.p = {
+                tw: 0, // tile width
+                start: 0,
+                psp: 0, // previous start position
+                eof: 0, // end or file
+                not: 0, //number of tiles
+                counter: 0,
+                ac: 0, // animation counter
+                page: 0 // page numbering 
+            }
+
 
 
             this.createBrowserWidthBreakPoints();
             this.setupEvents();
+            this.getDataFrom(this.settings.getDataFrom);
+        },
 
 
 
-            switch (this.settings.getDataFrom) {
+        /************************************************************************************
+         * Get Tile data from HTML or JSON
+         *
+         *
+         * NOTE: static html -  set number of tiles to show and without 
+         *
+         *************************************************************************************/
+        getDataFrom: function (string) {
+            
+            switch (string) {
 
             case "html-paging":
             case "html-static":
@@ -99,53 +122,47 @@
         },
 
 
-
-        /************************************************************************************
-         * Get Tile data from HTML, JSON or Object
-         *
-         *
-         *
-         *
-         *************************************************************************************/
-
-
-
-
-         // JSON - load data from ajax request, load another specific number of tiles from AJAX request 
-
-
-
         getTilesDataFromHTML: function () {
 
             this.tiles = [];
 
             var i = 0,
                 ii = 0,
-                x = 0,
-                y = 0;
+                w = 0,
+                h = 0;
 
+            // get all child elements (tiles)
             this.tileElements = $(this.element).children();
 
             this.largestTileWidth = 0;
 
-
+            // loop through tile elements
             for (i = 0; i < this.tileElements.length; i += 1) {
 
+                // loop through settings.tile
                 for (ii = 0; ii < this.settings.tile.length; ii += 1) {
 
+                    // identify if tile element has class name matching settings.tile
                     if ($(this.tileElements[i]).hasClass(this.settings.tile[ii].classname)) {
 
-                        x = this.settings.tile[ii].w;
+                        w = this.settings.tile[ii].w;
 
-                        y = this.settings.tile[ii].h;
+                        h = this.settings.tile[ii].h;
 
-                        this.tiles.push(this.tileTemplate(x, y));
+                        // create new tile
+                        this.tiles.push(this.tileTemplate(w, h));
 
-                        this.largestTileWidth = this.largestTileWidth < x ? x : this.largestTileWidth;
+                        this.largestTileWidth = this.largestTileWidth < w ? w : this.largestTileWidth;
 
                         break;
                     }
                 }
+            }
+
+            // Only on first load
+            if (!this.stopPoint) {
+                this.stopPoint = this.tiles.length;
+                this.eof = this.tiles.length;
             }
 
             this.browserResized();
@@ -156,33 +173,34 @@
 
             var me = this;
 
-            $.getJSON("data/tiles.json", function(data) {
+            $.getJSON(this.settings.url, function(data) {
 
                 var i = 0,
                     ii = 0,
                     eof = data.tiles.length,
-                    x = 0,
-                    y = 0,
+                    w = 0,
+                    h = 0,
                     classname;
 
+                // loop through data
                 for (i = 0; i < eof; i += 1) {
 
                     classname = data.tiles[i].tile.classname;
 
+                    // loop through settings tiles 
                     for (ii = 0; ii < me.settings.tile.length; ii += 1) {
 
                         if (classname === me.settings.tile[ii].classname) {
 
-                            x = me.settings.tile[ii].w;
+                            w = me.settings.tile[ii].w;
 
-                            y = me.settings.tile[ii].h;
+                            h = me.settings.tile[ii].h;
 
-                            me.tiles.push(me.tileTemplate(x, y, classname));
+                            me.tiles.push(me.tileTemplate(w, h, classname));
 
-                            me.largestTileWidth = me.largestTileWidth < x ? x : me.largestTileWidth;
+                            me.largestTileWidth = me.largestTileWidth < w ? w : me.largestTileWidth;
                         }
                     }
-
                 }
 
 
@@ -193,7 +211,7 @@
 
             })
                 .fail(function(e) {
-                    console.log("error", e);
+                    //console.log("error", e);
                 });
 
         },
@@ -256,24 +274,38 @@
             return b;
         },
 
-        getNumberOfTiles: function () {
-            var i = 0,
-                eof = this.stopPoint,
-                x = 0,
-                y = 0,
-                num = 0;
 
-            for (i = 0; i < eof; i += 1) {
+        removeLargeTiles: function () {
+            var w = this.getWidth(),
+                i = 0;
 
-                x = this.tiles[i].w;
-                y = this.tiles[i].h;
-
-                num += (x * y);
+            for (i = 0; i < this.tiles.length; i += 1) {
+                if ((this.tiles[i].w * this.settings.tileWidth) > w) {
+                    this.tiles[i].display = "none";
+                }
             }
-
-            return num;
         },
 
+
+        setMinNumOfCols: function () {
+
+            /* USED when Tile Option Grid Lock is selected;
+             * 
+             */
+ 
+            // if width is less than largest tile width then extend columns
+
+            var w = this.getWidth(),
+                eof = this.largestTileWidth,
+                i = 0;
+
+            for (i = 0; i <= eof; i += 1) {
+
+                if (w < (this.settings.tileWidth * i)) {
+                    this.cols += 1;
+                }
+            }
+        },
 
         /************************************************************************************
          * Construct tile data
@@ -299,7 +331,7 @@
             switch (string) {
             case "moreTiles":
 
-                console.log("Add more tiles");
+                //console.log("Add more tiles");
 
                 break;
             case "browserResize":
@@ -333,34 +365,6 @@
             }
 
             this.build();
-        },
-
-
-        removeLargeTiles: function () {
-            var w = this.getWidth(),
-                i = 0;
-
-            for (i = 0; i < this.tiles.length; i += 1) {
-                if ((this.tiles[i].w * this.settings.tileWidth) > w) {
-                    this.tiles[i].display = "none";
-                }
-            }
-        },
-
-        setMinNumOfCols: function () {
-
-            // if width is less than largest tile width then extend columns
-
-            var w = this.getWidth(),
-                eof = this.largestTileWidth,
-                i = 0;
-
-            for (i = 0; i <= eof; i += 1) {
-
-                if (w < (this.settings.tileWidth * i)) {
-                    this.cols += 1;
-                }
-            }
         },
 
 
@@ -436,7 +440,7 @@
                 if (!this.tiles[tc] || tc === this.stopPoint) {
 
                     this.updateHTMLElements();
-
+                    
                     break;
                 }
 
@@ -454,35 +458,6 @@
                 }
             }
             this.removeEmptyRowsFromGrid();
-        },
-
-
-        removeEmptyRowsFromGrid: function () {
-            var i, c, ii, d = [];
-            // search rows for empty columns 
-            for (i = 0; i < this.grid.length; i += 1) {
-                c = 0;
-                for (ii = 0; ii < this.grid[i].length; ii += 1) {
-                    if (!this.grid[i][ii]) {
-                        c += 1;
-                    }
-                }
-
-                // if the entire row is false then add row number to be deleted
-                if (c === this.cols) {
-                    d.push(i);
-                }
-
-            }
-            // reverse array to start the delete loop with the highest number 
-            d.reverse();
-
-            for (i = 0; i < d.length; i += 1) {
-                this.grid.splice(d[i], 1);
-            }
-
-            this.updateElementHeight(this.grid.length * this.settings.tileWidth);
-            //this.animateTiles($(".tile"));
         },
 
 
@@ -520,11 +495,29 @@
 
 
         updateTile: function (index, row, column) {
-            var top = (row * this.settings.tileWidth + (this.settings.spacing / 2)),
-                left = (column * this.settings.tileWidth + (this.settings.spacing / 2)),
-                w = ((this.settings.tileWidth * this.tiles[index].w) - this.settings.spacing),
-                h = ((this.settings.tileWidth * this.tiles[index].h) - this.settings.spacing);
 
+            // showGutter: if guttering is false then the spacing removed must be divided evenly across all tiles 
+
+                // calculate spacing between tiles
+            var spacing = this.settings.showGutter ? (this.settings.spacing / 2) : Math.floor(this.settings.spacing / this.cols),
+
+                // calculate tile width 
+                tileWidth = this.settings.showGutter ? this.settings.tileWidth : (this.settings.tileWidth + spacing),
+
+                // calculate top position 
+                top = this.settings.showGutter ? (row * this.settings.tileWidth) + spacing : (row * (this.settings.tileWidth + spacing)),
+
+                // calculate left position 
+                left = this.settings.showGutter ? (column * this.settings.tileWidth) + spacing : (column * (this.settings.tileWidth + spacing)),
+
+                // calculate tile width 
+                w = ((tileWidth * this.tiles[index].w) - this.settings.spacing),
+
+                // calculate tile height
+                h = ((tileWidth * this.tiles[index].h) - this.settings.spacing);
+
+
+            // Update tile object
             this.tiles[index].created = true;
             this.tiles[index].t = top;
             this.tiles[index].l = left;
@@ -534,23 +527,14 @@
         },
 
 
-        shrink: function (w) {
 
-            var width = this.getWidth(),
-                i = 0,
-                tw = w;
-
-            for (i = 0; i <= w; i += 1) {
-
-                if (width < (this.settings.tileWidth * i)) {
-                    tw -= 1;
-                }
-            }
-
-            return tw;
-        },
-
-
+        /************************************************************************************
+         * GRID
+         *
+         *
+         *
+         *
+         *************************************************************************************/
         gridHasSpace: function (w, h, row, column) {
 
             var b = true,
@@ -611,6 +595,35 @@
                     this.grid[row + i][column + ii] = 1;
                 }
             }
+        },
+
+
+        removeEmptyRowsFromGrid: function () {
+            var i, c, ii, d = [];
+            // search rows for empty columns 
+            for (i = 0; i < this.grid.length; i += 1) {
+                c = 0;
+                for (ii = 0; ii < this.grid[i].length; ii += 1) {
+                    if (!this.grid[i][ii]) {
+                        c += 1;
+                    }
+                }
+
+                // if the entire row is false then add row number to be deleted
+                if (c === this.cols) {
+                    d.push(i);
+                }
+
+            }
+            // reverse array to start the delete loop with the highest number 
+            d.reverse();
+
+            for (i = 0; i < d.length; i += 1) {
+                this.grid.splice(d[i], 1);
+            }
+
+            this.updateElementHeight(this.grid.length * this.settings.tileWidth);
+            //this.animateTiles($(".tile"));
         },
 
 
@@ -699,11 +712,11 @@
 
             var i = this.startLoop,
                 eof = this.stopPoint,
-                e;
+                w = 0;
 
             for (i = this.startLoop; i < eof; i += 1) {
 
-                document.createElement("div");
+            var e = document.createElement("div");
 
                 e.setAttribute("class", this.settings.classname + " " + this.tiles[i].classname);
                 e.innerHTML = i;
@@ -748,10 +761,10 @@
 
         scrollDown: function () {
             var me = this;
-            $(window).scroll(function () {
-                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-                    me.addMoreTiles();
-                }
+            $(window).scroll(function () { 
+               if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+                  me.addMoreTiles();
+               }
             });
         },
 
@@ -776,6 +789,44 @@
                 display: "block",
                 html: html || ""
             };
+        },
+
+
+        getNumberOfTiles: function () {
+            var i = 0,
+                eof = this.stopPoint,
+                x = 0,
+                y = 0,
+                num = 0;
+
+            for (i = 0; i < eof; i += 1) {
+
+                x = this.tiles[i].w;
+                y = this.tiles[i].h;
+
+                num += (x * y);
+            }
+
+            return num;
+
+            // calculates the total number of 1x1 tiles within the tiles object
+        },
+
+
+        shrink: function (w) {
+
+            var width = this.getWidth(),
+                i = 0,
+                tw = w;
+
+            for (i = 0; i <= w; i += 1) {
+
+                if (width < (this.settings.tileWidth * i)) {
+                    tw -= 1;
+                }
+            }
+
+            return tw;
         },
 
 
@@ -816,7 +867,10 @@
         },
 
         updateElementHeight: function (height) {
-            $(this.element)[0].style.height = height + "px";
+
+            var h = this.settings.showGutter ? height : (height - (this.settings.spacing/2));
+
+            $(this.element)[0].style.height = h + "px";
         },
 
 
@@ -847,7 +901,7 @@
 
             case "html-paging":
  
-                $.get("html/page-" + this.pageNum + ".html", function(data) {
+                $.get(this.settings.url + this.pageNum + ".html", function(data) {
 
                     $(me.element).append(data);
 
@@ -1006,7 +1060,6 @@
 
             // calculate tiles to fit window
             this.settings.tileWidth += Math.floor((w - (this.settings.tileWidth * this.cols)) / this.cols);
-
         },
 
 
@@ -1017,11 +1070,11 @@
             this.interval = setInterval(function () {
                 w = me.getWidth();
 
-                if (breakpoints[0] < w) {
+                if (breakpoints[0] <= w) {
 
                     me.browserResized();
 
-                } else if (breakpoints[1] > w && w > me.settings.resize[0].breakpoint) {
+                } else if (breakpoints[1] >= w && w >= me.settings.resize[0].breakpoint) {
 
                     me.browserResized();
                 }

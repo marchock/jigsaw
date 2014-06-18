@@ -1,0 +1,34 @@
+{
+  "name": "boilerplate",
+  "title": "jQuery Boilerplate",
+  "description": "A jump-start for jQuery plugins development.",
+  "keywords": [
+    "jquery",
+    "boilerplate",
+    "plugins"
+  ],
+  "version": "1.0.0",
+  "author": {
+    "name": "Ryan Marchock",
+    "url": "https://github.com/marchock/jigsaw"
+  },
+  "maintainers": [
+    {
+      "name": "Ryan Marchock",
+      "url": "https://github.com/marchock/jigsaw"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "",
+      "url": ""
+    }
+  ],
+  "bugs": "https://github.com/marchock/jigsaw/issues",
+  "homepage": "",
+  "docs": "https://github.com/marchock/jigsaw/blob/master/README.md",
+  "download": "https://github.com/marchock/jigsaw/archive/master.zip",
+  "dependencies": {
+    "jquery": ">=1.4"
+  }
+}
