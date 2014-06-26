@@ -1,11 +1,12 @@
 {
-  "name": "boilerplate",
-  "title": "jQuery Boilerplate",
-  "description": "A jump-start for jQuery plugins development.",
+  "name": "jigsaw",
+  "title": "Jigsaw responsive grid layout",
+  "description": "Jigsaw responsive grid layout",
   "keywords": [
     "jquery",
     "boilerplate",
-    "plugins"
+    "plugins",
+    "jigsaw"
   ],
   "version": "1.0.0",
   "author": {

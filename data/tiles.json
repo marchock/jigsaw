@@ -2,7 +2,7 @@
     "tiles":[
         {
             "id":"1",
-            "hexValue":"#f00",
+            "html": "<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"largeitem"
@@ -10,7 +10,7 @@
         },
         {
             "id":"2",
-            "hexValue":"#0f0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname": "longitem"
@@ -18,7 +18,7 @@
         },
         {
             "id":"3",
-            "hexValue":"#00f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname": "tallitem"
@@ -26,7 +26,7 @@
         },
         {
             "id":"4",
-            "hexValue":"#0ff",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -34,7 +34,7 @@
         },
         {
             "id":"5",
-            "hexValue":"#f0f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -42,7 +42,7 @@
         },
         {
             "id":"6",
-            "hexValue":"#ff0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -50,7 +50,7 @@
         },
         {
             "id":"7",
-            "hexValue":"#000",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -58,7 +58,7 @@
         },
         {
             "id":"8",
-            "hexValue":"#f00",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -66,7 +66,7 @@
         },
         {
             "id":"9",
-            "hexValue":"#0f0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -74,7 +74,7 @@
         },
         {
             "id":"10",
-            "hexValue":"#00f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -82,7 +82,7 @@
         },
         {
             "id":"11",
-            "hexValue":"#0ff",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -90,7 +90,7 @@
         },
         {
             "id":"12",
-            "hexValue":"#f0f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -98,7 +98,7 @@
         },
         {
             "id":"13",
-            "hexValue":"#ff0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -106,7 +106,7 @@
         },
         {
             "id":"14",
-            "hexValue":"#000",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -114,7 +114,7 @@
         },
         {
             "id":"15",
-            "hexValue":"#f00",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -122,7 +122,7 @@
         },
         {
             "id":"16",
-            "hexValue":"#0f0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -130,7 +130,7 @@
         },
         {
             "id":"17",
-            "hexValue":"#00f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -138,7 +138,7 @@
         },
         {
             "id":"18",
-            "hexValue":"#0ff",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -146,7 +146,7 @@
         },
         {
             "id":"19",
-            "hexValue":"#f0f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -154,7 +154,7 @@
         },
         {
             "id":"20",
-            "hexValue":"#ff0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -162,7 +162,7 @@
         },
         {
             "id":"21",
-            "hexValue":"#000",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -170,7 +170,7 @@
         },
         {
             "id":"22",
-            "hexValue":"#f00",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -178,7 +178,7 @@
         },
         {
             "id":"23",
-            "hexValue":"#0f0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -186,7 +186,7 @@
         },
         {
             "id":"24",
-            "hexValue":"#00f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -194,7 +194,7 @@
         },
         {
             "id":"25",
-            "hexValue":"#0ff",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -202,7 +202,7 @@
         },
         {
             "id":"26",
-            "hexValue":"#f0f",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -210,7 +210,7 @@
         },
         {
             "id":"27",
-            "hexValue":"#ff0",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"
@@ -218,7 +218,7 @@
         },
         {
             "id":"28",
-            "hexValue":"#000",
+            "html":"<p>html goes here</p>",
             "classname":"item",
             "tile": {
                 "classname":"smallitem"

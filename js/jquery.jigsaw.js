@@ -1,12 +1,22 @@
 
 //https://github.com/jquery-boilerplate/jquery-boilerplate/wiki/How-to-publish-a-plugin-in-jQuery-Plugin-Registry
 
+//https://github.com/PharkMillups/beautiful-docs
+
+// http://codegeekz.com/jquery-grids/
+
+//http://dillinger.io/
+
+//http://jbt.github.io/markdown-editor/
+
 // ------------------------------------------------------------------------
 
  // TODO 
 
 // comment code descriptively as possible 
 
+
+// create test cases
 
 
 
@@ -24,20 +34,59 @@
 
             getDataFrom: "html-static",
 
-            getWidthFrom: "",
+            url: "",
 
-            tile: {},
-
-            resize: {},
-
-            resizeIndex: 0,
+            // url: "html/page-",
 
             loadNumOfTiles: null,
 
+            getWidthFrom: "",
+
+            tileOption: "Resize", // Remove -- GridLock
+
+            showGutter: true,
+
+            tile: [
+                {
+                    classname: "smallitem",
+                    w: 1,
+                    h: 1
+                },
+                {
+                    classname: "largeitem",
+                    w: 2,
+                    h: 2
+                },
+                {
+                    classname: "longitem",
+                    w: 2,
+                    h: 1
+                },
+                {
+                    classname: "tallitem",
+                    w: 1,
+                    h: 2
+                }
+            ],
+
+            resize: [
+                {
+                    breakpoint: 320,
+                    tileWidth: 160,
+                    tileSpace: 8
+                }
+            ],
+
             animate: false,
 
+            scroll: false,
+
+            loadMore: false,
+
             classname: "item"
+
         };
+
 
     // The actual plugin constructor
     function Plugin(element, options) {
@@ -60,7 +109,17 @@
 
             // number of tiles created "NUMBER"
             this.numOfTiles = 0;
+
             this.tileCounter = 0;
+
+            this.startLoop = 0;
+
+            this.lastStopLoopLoaded = 0;
+
+            this.animationCounter = 0;
+
+            
+
 
 
             // limit the number of tiles created 
@@ -69,25 +128,11 @@
             // get end of file number
             this.eof = this.settings.loadNumOfTiles;
 
-            this.startLoop = 0;
-            this.lastStopLoopLoaded = 0;
-
-            this.animationCounter = 0;
-
-            this.pageNum = 2;
-
-            // TODO: rework this in the code 
-            this.p = {
-                tw: 0, // tile width
-                start: 0,
-                psp: 0, // previous start position
-                eof: 0, // end or file
-                not: 0, //number of tiles
-                counter: 0,
-                ac: 0, // animation counter
-                page: 0 // page numbering 
+            // html paging option is selected then set the start page
+            if (this.settings.paging) {
+                this.pageNum = this.settings.paging.start;
             }
-
+            
 
 
             this.createBrowserWidthBreakPoints();
@@ -109,6 +154,16 @@
             switch (string) {
 
             case "html-paging":
+
+                // provide the option to start page 1 inside of index.html or grab 
+                // page data 
+                if (this.settings.paging.start > 1) {
+                    this.getTilesDataFromHTML();
+                } else {
+                   this.addMoreTiles();
+                }
+
+                break;
             case "html-static":
                 this.getTilesDataFromHTML();
 
@@ -226,6 +281,10 @@
          *
          *************************************************************************************/
         tileOptionGridLock: function () {
+            // Tile option grid lock selected
+            // If the largest tile is larger than then container/window width then the app will break
+
+            // this fixes this issue
             this.setMinNumOfCols();
         },
 
@@ -665,6 +724,41 @@
         },
 
 
+        createHTMLElements: function () {
+
+            var i = this.startLoop,
+                eof = this.stopPoint,
+                w = 0;
+
+            for (i = this.startLoop; i < eof; i += 1) {
+
+            var e = document.createElement("div");
+
+                e.setAttribute("class", this.settings.classname + " " + this.tiles[i].classname);
+                e.innerHTML = i;
+
+                this.element.appendChild(e);
+
+            }
+
+            this.tileElements = $(this.element).children();
+
+            this.browserResized("moreTiles");
+        },
+
+
+
+
+
+        /************************************************************************************
+         * ANIMATION CONTROLLER
+         *
+         *
+         *
+         *
+         *************************************************************************************/
+
+
         animationController: function () {
 
             if (this.animationCounter < this.stopPoint) {
@@ -698,38 +792,6 @@
 
             }, time);
         },
-
-
-
-        /************************************************************************************
-         * create tile elements and output to HTML
-         *
-         *
-         *
-         *
-         *************************************************************************************/
-        createHTMLElements: function () {
-
-            var i = this.startLoop,
-                eof = this.stopPoint,
-                w = 0;
-
-            for (i = this.startLoop; i < eof; i += 1) {
-
-            var e = document.createElement("div");
-
-                e.setAttribute("class", this.settings.classname + " " + this.tiles[i].classname);
-                e.innerHTML = i;
-
-                this.element.appendChild(e);
-
-            }
-
-            this.tileElements = $(this.element).children();
-
-            this.browserResized("moreTiles");
-        },
-
 
         /************************************************************************************
          * EVENTS
@@ -900,24 +962,29 @@
             switch (this.settings.getDataFrom) {
 
             case "html-paging":
- 
-                $.get(this.settings.url + this.pageNum + ".html", function(data) {
 
-                    $(me.element).append(data);
+            // number of page set in the parameters 
+                if (this.settings.paging.end >= this.pageNum) {
 
-                    me.getTilesDataFromHTML();
+                    $.get(this.settings.paging.url + this.pageNum + ".html", function(data) {
 
-                    me.startLoop = me.eof;
+                        $(me.element).append(data);
 
-                    me.stopPoint = me.tiles.length;
+                        me.getTilesDataFromHTML();
 
-                    me.eof = me.tiles.length;
+                        me.startLoop = me.eof;
 
-                    me.solveJigsaw("moreTiles");
+                        me.stopPoint = me.tiles.length;
 
-                    me.pageNum += 1;
+                        me.eof = me.tiles.length;
 
-                });
+                        me.solveJigsaw("moreTiles");
+
+                        me.pageNum += 1;
+
+                    });
+                }
+
 
                 break;
 
@@ -1041,19 +1108,20 @@
 
         defineTileProperties: function (w) {
 
-            var i = 0;
+            var i = 0,
+                resizeIndex = 0;
 
             // find which tile size to use
             for (i = 0; i < this.settings.resize.length; i += 1) {
                 if (this.bwbp[i][1] >= w &&
                         this.bwbp[i][0] < w) {
 
-                    this.settings.resizeIndex = i;
+                    resizeIndex = i;
                 }
             }
 
-            this.settings.spacing = this.settings.resize[this.settings.resizeIndex].tileSpace;
-            this.settings.tileWidth = this.settings.resize[this.settings.resizeIndex].tileWidth;
+            this.settings.spacing = this.settings.resize[resizeIndex].tileSpace;
+            this.settings.tileWidth = this.settings.resize[resizeIndex].tileWidth;
 
             // calculate the number of columns (MAth.floor rounds the number down)
             this.cols = Math.floor(w / this.settings.tileWidth);

@@ -34,7 +34,7 @@
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
-                <div class="item largeitem"></div>
+<!--                 <div class="item largeitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item largeitem"></div>
@@ -81,7 +81,7 @@
                 <div class="item largeitem"></div>
                 <div class="item smallitem"></div>
                 <div class="item smallitem"></div>
-                <div class="item smallitem"></div>
+                <div class="item smallitem"></div> -->
             </div>
         </div>
 
@@ -89,8 +89,10 @@
 
         <div class="load-more"><p>LOAD MORE</p></div>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="js/jquery.jigsaw.js"></script>
+        <script type="text/javascript"  src="js/lib/jquery-1.11.1.min.js"></script>
+        
+        <script type="text/javascript" src="js/jquery.jigsaw.js"></script>
+
 
         <script type="text/javascript">
 
@@ -99,13 +101,17 @@
 
                 $(".jigsaw").jigsaw({
 
-                    getDataFrom: "json",
+                    getDataFrom: "html-paging",
 
-                    url: "data/tiles.json",
+                    //url: "data/tiles.json",
 
-                    // url: "html/page-",
+                    paging: {
+                        start: 2,
+                        end: 4,
+                        url: "html/page-"
+                    },
 
-                    loadNumOfTiles: 20,
+                    //loadNumOfTiles: 20,
 
                     getWidthFrom: ".something",
 
@@ -173,6 +179,8 @@
             });
 
         </script>
+
+
 	</body>
 
 </html>

@@ -2,9 +2,11 @@ var gulp = require('gulp');
 // var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
 //var gutil = require('gulp-util');
+//var jasmine = require('gulp-jasmine');
 
-gulp.task('default', function(){
-  // place code for your default task here
+gulp.task('default', function () {
+    //gulp.src('spec/test.js')
+    //    .pipe(jasmine());
 });
 
 
@@ -30,3 +32,5 @@ gulp.task('compress', function() {
     .pipe(uglify())
     .pipe(gulp.dest('dist'))
 });
+
+
