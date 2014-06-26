@@ -8,22 +8,20 @@ Plugin Parameters
 -----------------
 
 
-Parameters      | Type			| Notes
---------------- | ------------- | --------------------------
-getDataFrom     |  string		| 3 options
-url             |  string		| only used when getting a json file 
-paging          |  object       | paging is only used when "html-paging" is selected 
-loadNumOfTiles  |  number		| if a number is not specified it will load all elements
-getWidthFrom    |  string		| if not specified it will retreive the window width
-tileOption      |  string		| 3 options
-showGutter      |  boolean		| 
-tile            |  array		|
-resize          |  array		|
-animate         |  object		|
-scroll          |  boolean		|
-loadMore        |  boolean		|
-
-
+Parameters      | Type		| Notes
+--------------- | ------------- | -------------
+getDataFrom     |  string	| 3 options
+url             |  string	| only used when getting a json file 
+paging          |  objec	| paging is only used when "html-paging" is selected 
+loadNumOfTiles  |  number	| if a number is not specified it will load all elements
+getWidthFrom    |  string	| if not specified it will retreive the window width
+tileOption      |  string	| 3 options
+showGutter      |  boolean	| 
+tile            |  array	|
+resize          |  array	|
+animate         |  object	|
+scroll          |  boolean	|
+loadMore        |  boolean	|
 
 
 
@@ -41,6 +39,9 @@ loadMore        |  boolean		|
 
 grabs HTML elements that exist within the jigsaw element
 
+
+*HTML*
+
 ```
 <div class="jigsaw">
 	<div class="item largeitem"></div>
@@ -51,31 +52,14 @@ grabs HTML elements that exist within the jigsaw element
 	<div class="item largeitem"></div>
 	<div class="item smallitem"></div>
 </div>
-
-
+```
+*javascript*
+```
 $(".jigsaw").jigsaw({
 
     getDataFrom: "html-static",
 
     loadNumOfTiles: 5,
-
-    tile: [
-        {
-            classname: "smallitem",
-            w: 1,
-            h: 1
-        },
-        {
-            classname: "largeitem",
-            w: 2,
-            h: 2
-        }
-    ],
-
-    scroll: false,
-
-    loadMore: true
-
 });
 ```
 
@@ -130,6 +114,8 @@ gets JSON file and jigsaw creates HTML elemnts
         getDataFrom: "json",
 
         url: "data/tiles.json",
+        
+		loadNumOfTiles: 20,
     });
 ```
 
