@@ -90,8 +90,6 @@ html/page-1.html
 <div class="item smallitem"></div>
 <div class="item largeitem"></div>
 <div class="item smallitem"></div>
-   
-    
 ```
 
 
