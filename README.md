@@ -26,7 +26,7 @@ loadMore        |  boolean	|
 
 
 
-####**getDataFrom: string**
+getDataFrom: string
 =======================
 
 1. html-static
