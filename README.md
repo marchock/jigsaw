@@ -22,7 +22,8 @@ resize          |  array	|
 animate         |  object	|
 scroll          |  boolean	|
 loadMore        |  boolean	|
------------------------------------
+
+
 
 
 ####**getDataFrom: string**
