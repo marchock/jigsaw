@@ -22,11 +22,11 @@ resize          |  array	|
 animate         |  object	|
 scroll          |  boolean	|
 loadMore        |  boolean	|
-
+-----------------------------------
 
 
 ####**getDataFrom: string**
----------------------------
+=======================
 
 1. html-static
 2. html-paging
