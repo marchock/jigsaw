@@ -4,9 +4,7 @@ jigsaw (jQuery Plugin)
 is a responsive grid layout tool, solves how elements with specified widths and heights can be fitted within a specified width.
 
 
-Plugin Parameters 
------------------
-
+###Plugin Parameters 
 
 Parameters      | Type		| Notes
 --------------- | ------------- | -------------
@@ -24,11 +22,9 @@ scroll          |  boolean	|
 loadMore        |  boolean	|
 
 
+-------------------------
 
-
-getDataFrom: string
-=======================
-
+###getDataFrom: string
 1. html-static
 2. html-paging
 3. json
