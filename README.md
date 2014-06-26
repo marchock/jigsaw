@@ -1,37 +1,93 @@
-jigsaw
-======
+jigsaw (jQuery Plugin)
+=====
 
 is a responsive grid layout tool, solves how elements with specified widths and heights can be fitted within a specified width.
 
 
-Plugin Options 
---------------
-
-**getDataFrom: string**
-
-Three predifined string options to choose where data can be collected.
+Plugin Parameters 
+-----------------
 
 
+Parameters      | Type			| Notes
+--------------- | ------------- | --------------------------
+getDataFrom     |  string		| 3 options
+url             |  string		| only used when getting a json file 
+paging          |  object       | paging is only used when "html-paging" is selected 
+loadNumOfTiles  |  number		| if a number is not specified it will load all elements
+getWidthFrom    |  string		| if not specified it will retreive the window width
+tileOption      |  string		| 3 options
+showGutter      |  boolean		| 
+tile            |  array		|
+resize          |  array		|
+animate         |  object		|
+scroll          |  boolean		|
+loadMore        |  boolean		|
 
 
 
 
-####1 "html-static"
 
-all HTML elements resides within the index.html
+####**getDataFrom: string**
+---------------------------
+
+1. html-static
+2. html-paging
+3. json
+
+
+
+
+#####1. html-static
+
+grabs HTML elements that exist within the jigsaw element
 
 ```
-    $(".jigsaw").jigsaw({
-        getDataFrom: "html-static"
-    });
+<div class="jigsaw">
+	<div class="item largeitem"></div>
+	<div class="item smallitem"></div>
+	<div class="item smallitem"></div>
+	<div class="item smallitem"></div>
+	<div class="item smallitem"></div>
+	<div class="item largeitem"></div>
+	<div class="item smallitem"></div>
+</div>
+
+
+$(".jigsaw").jigsaw({
+
+    getDataFrom: "html-static",
+
+    loadNumOfTiles: 5,
+
+    tile: [
+        {
+            classname: "smallitem",
+            w: 1,
+            h: 1
+        },
+        {
+            classname: "largeitem",
+            w: 2,
+            h: 2
+        }
+    ],
+
+    scroll: false,
+
+    loadMore: true
+
+});
 ```
 
-####2 "html-paging"
+#####2. html-paging
 
-html elements reside outside of the index.html and pages are created. Example below displays where the pages can be found and how many pages exist.
-
+Gets elements from HTML pages and loads them into the jigsaw element
 
 ```
+<div class="jigsaw">
+	page one elements
+</div>
+
     $(".jigsaw").jigsaw({
 
         getDataFrom: "html-paging",
@@ -42,15 +98,33 @@ html elements reside outside of the index.html and pages are created. Example be
             url: "html/page-"
         }
     });
+    
+```
+html/page-1.html
+```
+<div class="item largeitem"></div>
+<div class="item smallitem"></div>
+<div class="item smallitem"></div>
+<div class="item smallitem"></div>
+<div class="item smallitem"></div>
+<div class="item largeitem"></div>
+<div class="item smallitem"></div>
+   
+    
 ```
 
 
 
-####3 "json"
+#####3. json
 
-JSON file can be used to send data to jigsaw and it will create the elements
+gets JSON file and jigsaw creates HTML elemnts 
 
 ```
+<div class="jigsaw">
+	html created here
+</div>
+
+
     $(".jigsaw").jigsaw({
 
         getDataFrom: "json",
