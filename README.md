@@ -14,12 +14,12 @@ paging          |  objec	| paging is only used when "html-paging" is selected
 loadNumOfTiles  |  number	| if a number is not specified it will load all elements
 getWidthFrom    |  string	| if not specified it will retreive the window width
 tileOption      |  string	| 3 options
-showGutter      |  boolean	| 
+showGutter      |  boolean	| show spacing on the left and right side 
 tile            |  array	|
 resize          |  array	|
-animate         |  object	|
-scroll          |  boolean	|
-loadMore        |  boolean	|
+animate         |  object	| animate elements onLoad
+scroll          |  boolean	| loads more elements when scrolled to the end of the page
+loadMore        |  boolean	| loads more elements when tapping on a button
 
 
 -------------------------
@@ -36,9 +36,17 @@ loadMore        |  boolean	|
 
 grabs HTML elements that exist within the jigsaw element
 
+*javascript*
+```
+$(".jigsaw").jigsaw({
+
+    getDataFrom: "html-static",
+
+    loadNumOfTiles: 5,
+});
+```
 
 *HTML*
-
 ```
 <div class="jigsaw">
 	<div class="item largeitem"></div>
@@ -50,15 +58,7 @@ grabs HTML elements that exist within the jigsaw element
 	<div class="item smallitem"></div>
 </div>
 ```
-*javascript*
-```
-$(".jigsaw").jigsaw({
 
-    getDataFrom: "html-static",
-
-    loadNumOfTiles: 5,
-});
-```
 
 #####2. html-paging
 
@@ -125,4 +125,75 @@ JSON example
             "classname":"largeitem"
         }
     }
+```
+
+------------------------------
+
+
+###tileOption: string
+1. resize
+2. remove
+3. grid
+
+
+
+------------------------------
+
+
+###tile: array
+
+specifies class names, element width and height
+
+```
+	tile: [
+		{
+		    classname: "smallitem",
+		    w: 1,
+		    h: 1
+		},
+		{
+		    classname: "largeitem",
+		    w: 2,
+		    h: 2
+		},
+		{
+		    classname: "longitem",
+		    w: 2,
+		    h: 1
+		},
+		{
+		    classname: "tallitem",
+		    w: 1,
+		    h: 2
+		}
+	]
+```
+
+
+------------------------------
+
+
+###resize: array
+
+break points 
+
+```
+    resize: [
+        {
+            breakpoint: 320,
+            tileWidth: 160,
+            tileSpace: 8
+        },
+        {
+            breakpoint: 480,
+            tileWidth: 200,
+            tileSpace: 10
+        },
+
+        {
+            breakpoint: 1200,
+            tileWidth: 250,
+            tileSpace: 18
+        }
+    ]
 ```
