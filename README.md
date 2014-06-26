@@ -22,7 +22,7 @@ all HTML elements resides within the index.html
 
 ```
     $(".jigsaw").jigsaw({
-        getDataFrom: string
+        getDataFrom: "html-static"
     });
 ```
 
