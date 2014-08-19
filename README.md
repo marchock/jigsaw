@@ -1,19 +1,34 @@
 jigsaw (jQuery Plugin)
 =====
 
-is a responsive grid layout tool, solves how elements with specified widths and heights can be fitted within a specified width.
+A responsive grid system...
+
+
+- three options to input grid elements
+- define the number of grid elements to load at a time
+- inherit a width from a containing element if specified
+- hide and show outer guttering
+- Can assign a class name, for each grid element dimensions
+- Can set break points to resize grid elements according to your specification
+- turn animations on and off
+- turn scroll on or off to trigger load more tiles at the end of page
+- option to load further grid elements by activating scrolling
+- options to load further grid elements by activating load more button
+- can specify a class name referring to all grid elements
+
+
 
 
 ###Plugin Parameters 
 
 Parameters      | Type      | Notes
 --------------- | ------------- | -------------
-getDataFrom     |  string   | 3 options
-url             |  string   | only used when getting a json file 
-paging          |  objec    | paging is only used when "html-paging" is selected 
-loadNumOfTiles  |  number   | if a number is not specified it will load all elements
-getWidthFrom    |  string   | if not specified it will retreive the window width
-tileOption      |  string   | 3 options
+getDataFrom     |  string   | three options to choose how to receive element data
+url             |  string   | used when getting data from a json file 
+paging          |  objec    | paging is used when getting data from "html-paging"
+loadNumOfTiles  |  number   | if a number is not specified it will load all elements and should not be used with "html-paging"
+getWidthFrom    |  string   | if not specified it will retrieve the window width
+tileOption      |  string   | three options to choose
 showGutter      |  boolean  | show spacing on the left and right side 
 tile            |  array    |
 resize          |  array    |
