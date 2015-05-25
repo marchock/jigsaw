@@ -23,6 +23,18 @@ time, mark, audio, video {
   font-size: 100%;
   vertical-align: baseline; }
 
+
+  h1 {
+    font-size: 28px;
+    font-family: arial;
+    padding: 10px;
+    text-align: center;
+  }
+  p {
+    text-align: center;
+    padding: 10px;
+  }
+
 /* line 22, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html {
   line-height: 1; }

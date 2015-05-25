@@ -130,9 +130,9 @@ JGSW("ElementsController", function (s, u, e) {
             switch (string) {
 
             case "loadMore":
-
-                $btnLoadMore.style.display = "none";
-
+                if (Settings.loadMore) {
+                    $btnLoadMore.style.display = "none";
+                }
                 break;
             }
         },
@@ -141,9 +141,9 @@ JGSW("ElementsController", function (s, u, e) {
             switch (string) {
 
             case "loadMore":
-
-                $btnLoadMore.style.display = "block";
-
+                if (Settings.loadMore) {
+                    $btnLoadMore.style.display = "block";
+                }
                 break;
             }
         }
