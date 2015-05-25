@@ -1,8 +1,5 @@
-jigsaw (jQuery Plugin)
+jigsaw - responsive grid layout
 =====
-
-A responsive grid system...
-
 
 - three options to create grid elements
 - define the number of grid elements to load at a time
