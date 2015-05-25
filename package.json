@@ -1,0 +1,16 @@
+{
+  "name": "JIGSAW",
+  "version": "0.0.1",
+  "dependencies": {
+    "del": "^1.1.1",
+    "fs": "0.0.2",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-inject": "^1.2.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-uglify": "^1.2.0",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.1.0",
+    "util": "^0.10.3"
+  }
+}

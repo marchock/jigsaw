@@ -1,0 +1,50 @@
+.container {
+    max-width: 1100px;
+    position: relative;
+    margin: auto;
+    overflow-x: hidden;
+}
+
+.load-more {
+    text-align: center;
+    cursor: pointer;
+}
+
+
+
+/* JIGSAW STYLES
+************************************/
+.jigsaw {
+    width: 1400px;
+    height: 400px;
+    background-color: #DDD;
+    margin: auto;
+    position: relative;
+
+    /*overflow: hidden;*/
+}
+
+.jigsaw > div {
+    float: left;
+    position: absolute;
+    font-size: 20px;
+    font-family: arial; 
+    opacity: 1;
+    background-color: red;
+    display: none;
+}
+
+.jigsaw > div:hover {
+    opacity: 0.8;
+}
+
+.jigsaw .item.animate {
+    -webkit-transition: opacity 0.5s;
+    opacity: 0;
+    /*-webkit-transform: translate3d(0, 5000px, 0);*/
+}
+
+.jigsaw .item.animate.start {
+    opacity: 1;
+    /*-webkit-transform: translate3d(0, 0px, 0);*/
+}

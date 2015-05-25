@@ -4,7 +4,7 @@ jigsaw (jQuery Plugin)
 A responsive grid system...
 
 
-- three options to input grid elements
+- three options to create grid elements
 - define the number of grid elements to load at a time
 - inherit a width from a containing element if specified
 - hide and show outer guttering
@@ -17,49 +17,22 @@ A responsive grid system...
 - can specify a class name referring to all grid elements
 
 
-
-
-###Plugin Parameters 
-
-Parameters      | Type      | Notes
---------------- | ------------- | -------------
-getDataFrom     |  string   | three options to choose how to receive element data
-url             |  string   | used when getting data from a json file 
-paging          |  objec    | paging is used when getting data from "html-paging"
-loadNumOfTiles  |  number   | if a number is not specified it will load all elements and should not be used with "html-paging"
-getWidthFrom    |  string   | if not specified it will retrieve the window width
-tileOption      |  string   | three options to choose
-showGutter      |  boolean  | show spacing on the left and right side 
-tile            |  array    |
-resize          |  array    |
-animate         |  object   | animate elements onLoad
-scroll          |  boolean  | loads more elements when scrolled to the end of the page
-loadMore        |  boolean  | loads more elements when tapping on a button
-
-
 -------------------------
 
-###getDataFrom: string
-1. html-static
-2. html-paging
+
+Three options to create grid elements:
+
+1. html
+2. page
 3. json
 
 
 
 
-#####1. html-static
+#####1. html
 
-grabs HTML elements that exist within the jigsaw element
 
-*javascript*
-```
-$(".jigsaw").jigsaw({
-
-    getDataFrom: "html-static",
-
-    loadNumOfTiles: 5,
-});
-```
+Grid elements are created inside the jigsaw element, you must define a class name for every different size
 
 *HTML*
 ```
@@ -75,7 +48,20 @@ $(".jigsaw").jigsaw({
 ```
 
 
-#####2. html-paging
+*javascript*
+```
+var j = Jigsaw({
+
+    getDataFrom: "html",
+
+    loadNumOfTiles: 10,
+});
+```
+
+
+
+
+#####2. page
 
 Gets elements from HTML pages and loads them into the jigsaw element
 
@@ -84,17 +70,17 @@ Gets elements from HTML pages and loads them into the jigsaw element
     page one elements
 </div>
 
-    $(".jigsaw").jigsaw({
+var j = Jigsaw({
 
-        getDataFrom: "html-paging",
+        getDataFrom: "page",
 
-        paging: {
+        page: {
             start: 1,
-            end: 4,
+            num: 4,
             url: "html/page-"
         }
     });
-    
+
 ```
 html/page-1.html
 ```
@@ -111,7 +97,7 @@ html/page-1.html
 
 #####3. json
 
-gets JSON file and jigsaw creates HTML elemnts 
+gets JSON file and jigsaw creates HTML elemnts
 
 ```
 <div class="jigsaw">
@@ -119,12 +105,12 @@ gets JSON file and jigsaw creates HTML elemnts
 </div>
 
 
-    $(".jigsaw").jigsaw({
+var j = Jigsaw({
 
         getDataFrom: "json",
 
         url: "data/tiles.json",
-        
+
         loadNumOfTiles: 20,
     });
 ```
@@ -141,16 +127,6 @@ JSON example
         }
     }
 ```
-
-------------------------------
-
-
-###tileOption: string
-1. resize
-2. remove
-3. grid
-
-
 
 ------------------------------
 
@@ -190,7 +166,7 @@ specifies class names, element width and height
 
 ###resize: array
 
-break points 
+break points
 
 ```
     resize: [
@@ -212,3 +188,19 @@ break points
         }
     ]
 ```
+
+###Plugin Parameters
+
+Parameters      | Type      | Notes
+--------------- | ------------- | -------------
+getDataFrom     |  string   | three options to choose how to receive element data
+url             |  string   | used when getting data from a json file
+paging          |  objec    | paging is used when getting data from "html-paging"
+loadNumOfTiles  |  number   | if a number is not specified it will load all elements and should not be used with "html-paging"
+getWidthFrom    |  string   | if not specified it will retrieve the window width
+showGutter      |  boolean  | show spacing on the left and right side
+tile            |  array    |
+resize          |  array    |
+animate         |  object   | animate elements onLoad
+scroll          |  boolean  | loads more elements when scrolled to the end of the page
+loadMore        |  boolean  | loads more elements when tapping on a button

@@ -1,36 +1,11 @@
-var gulp = require('gulp');
-// var clean = require('gulp-clean');
-var uglify = require('gulp-uglify');
-//var gutil = require('gulp-util');
-//var jasmine = require('gulp-jasmine');
+var gulp = require('gulp'),
+    util = require('util'),
+    requireDir = require('require-dir');
 
-gulp.task('default', function () {
-    //gulp.src('spec/test.js')
-    //    .pipe(jasmine());
+requireDir('./gulp-tasks');
+
+// Default task
+gulp.task('default', ['inject-src', 'clean'], function() {
+    gulp.start("scripts", "copy", "inject-script-dest");
+    util.log('default task executed.');
 });
-
-
-// Watch
-// gulp.task('watch', function() {
-
-//     // Watch .js files
-//     gulp.watch('js/**/*.js', ['scripts']);
-
-
-// });
-
-
-// gulp.task('clean', function () {  
-//   return gulp.src('js', {read: false})
-//     .pipe(clean());
-// });
-
-
-
-gulp.task('compress', function() {
-  gulp.src('js/*.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('dist'))
-});
-
-

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <title>JIGSAW - JSON</title>
+    <link href="../css/jigsaw.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="container">
+        <form class="json-form" action="">
+        <!--  select name must match json file -->
+            <select class="option1" name="classname">
+                <option value="">Tile Class Name</option>
+                <option value="smallitem">small</option>
+                <option value="largeitem">Large</option>
+            </select>
+
+            <!--  select name must match json file -->
+            <select class="option2" name="filter">
+                <option value="">Filter</option>
+                <option value="filter1">filter1</option>
+                <option value="filter2">filter2</option>
+            </select>
+        </form>
+            <div class="jigsaw"></div>
+        </div>
+
+        <div class="load-more"><p>LOAD MORE</p></div>
+
+        <!-- inject:js -->
+        <script src="js/jigsaw.js"></script>
+        <!-- endinject -->
+        
+        <script type="text/javascript">
+
+        var j = new Jigsaw({
+
+                    getWidthFrom: ".container",
+
+                    getDataFrom: "json",
+
+                    urlEndPoint: true,
+
+                    url: "../data/tiles.json",
+
+                    tileTemplate: function (data , parent) {
+                        //console.log(data.classname)
+                        var e = document.createElement("div"),
+                            p = document.createElement("p"),
+                            t = document.createTextNode("text");
+
+
+                        e.setAttribute("class", "item " + data.classname);
+                        e.innerHTML = data.html;
+                        parent.appendChild(e);
+                    },
+
+                    loadMore: true,
+
+                    loadNumOfTiles: 20,
+
+                    showGutter: true,
+
+                    tile: [
+                        {
+                            classname: "largeitem",
+                            w: 2,
+                            h: 2
+                        },
+                        {
+                            classname: "smallitem",
+                            w: 1,
+                            h: 1
+                        }
+                    ],
+
+                    resize: [
+                        {
+                            breakpoint: 320,
+                            tileWidth: 120,
+                            tileHeight: 120,
+                            tileSpace: 8
+                        },
+                        {
+                            breakpoint: 480,
+                            tileWidth: 150,
+                            tileHeight: 120,
+                            tileSpace: 10
+                        },
+
+                        {
+                            breakpoint: 1200,
+                            tileWidth: 200,
+                            tileHeight: 120,
+                            tileSpace: 18
+                        }
+                    ]
+
+                });
+
+        </script>
+    </body>
+</html>
