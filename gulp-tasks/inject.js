@@ -4,24 +4,24 @@ var gulp = require('gulp'),
 
 
 gulp.task('inject-src', function() {
-    gulp.start("inject-script-src", "inject-script-src-jquery");
+    gulp.start("inject-script-src");
 });
 
 
 // Injects all script tags to page
 gulp.task('inject-script-src', function () {
   var path = "src/";
-  var target = gulp.src(path + 'vanilla/*.html');
+  var target = gulp.src(path + '*.html');
   // It's not necessary to read the files (will speed up things), we're only after their paths: 
-  var sources = gulp.src([path + 'vanilla/js/**/*.js'], {read: false});
+  var sources = gulp.src([path + 'js/**/*.js'], {read: false});
  
   return target.pipe(
         inject(sources,
             {
-                ignorePath: path + 'vanilla/',
+                ignorePath: path + '',
                 addRootSlash: false
             }))
-    .pipe(gulp.dest(path + 'vanilla'));
+    .pipe(gulp.dest(path));
 
 });
 
@@ -32,35 +32,18 @@ gulp.task('inject-script-dest', function () {
 
   setTimeout (function () {
 
-    var target = gulp.src(path + 'vanilla/*.html');
+    var target = gulp.src(path + '*.html');
     // It's not necessary to read the files (will speed up things), we're only after their paths: 
-    var sources = gulp.src([path + 'vanilla/js/*.js'], {read: false});
+    var sources = gulp.src([path + 'js/*.js'], {read: false});
 
     return target.pipe(
           inject(sources,
               {
-                  ignorePath: path + 'vanilla/',
+                  ignorePath: path + '',
                   addRootSlash: false
               }))
-      .pipe(gulp.dest(path + 'vanilla'));
+      .pipe(gulp.dest(path));
 
   }, 3000);
 });
 
-
-/* JQUERY */
-gulp.task('inject-script-src-jquery', function () {
-  var path = "src/";
-  var target = gulp.src(path + 'jquery/*.html');
-  // It's not necessary to read the files (will speed up things), we're only after their paths: 
-  var sources = gulp.src([path + 'jquery/js/*.js'], {read: false});
- 
-  return target.pipe(
-        inject(sources,
-            {
-                ignorePath: path + 'jquery/',
-                addRootSlash: false
-            }))
-    .pipe(gulp.dest(path + 'jquery'));
-
-});

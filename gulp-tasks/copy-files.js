@@ -6,17 +6,12 @@ var src = "src/",
 
 // Default task
 gulp.task('copy', function() {
-    gulp.start("copy-html", 'copy-html-jquery', "copy-css", "copy-data");
+    gulp.start("copy-html", "copy-css", "copy-data");
 });
 
 gulp.task('copy-html', function() {
-    return gulp.src(src + 'vanilla/*.html')
-      .pipe(gulp.dest(dest + 'vanilla/'));
-});
-
-gulp.task('copy-html-jquery', function() {
-    return gulp.src(src + 'jquery/*.html')
-      .pipe(gulp.dest(dest + 'jquery/'));
+    return gulp.src(src + '*.html')
+      .pipe(gulp.dest(dest));
 });
 
 gulp.task('copy-css', function() {

@@ -8,21 +8,15 @@ var src = "src/",
 
 // Default task
 gulp.task('scripts', function() {
-    gulp.start("scripts-vanilla", "scripts-jquery");
+    gulp.start("js-scripts");
 });
 
-gulp.task('scripts-jquery', function() {
-  return gulp.src([src + 'jquery/js/*.js'])
-    .pipe(concat('jigsaw.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest(dest + "jquery/js/"));
-});
 
-gulp.task('scripts-vanilla', function() {
-  return gulp.src([src + 'vanilla/js/*.js', src + 'vanilla/js/jigsaw/*.js'])
+gulp.task('js-scripts', function() {
+  return gulp.src([src + 'js/*.js', src + 'js/jigsaw/*.js'])
     .pipe(concat('jigsaw.js'))
     .pipe(uglify())
-    .pipe(gulp.dest(dest + "vanilla/js/"));
+    .pipe(gulp.dest(dest + "js/"));
 });
 
 // Clean - Deletes all the files before recompiling to ensure no unused files remain

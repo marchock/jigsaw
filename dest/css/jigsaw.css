@@ -1,3 +1,6 @@
+
+/* CONTAINER
+************************************/
 .container {
     max-width: 1100px;
     position: relative;
@@ -5,11 +8,19 @@
     overflow-x: hidden;
 }
 
+/* BUTTON
+************************************/
 .load-more {
     text-align: center;
     cursor: pointer;
 }
 
+/* FORM
+************************************/
+.json-form {
+    text-align: center;
+    padding: 20px;
+}
 
 
 /* JIGSAW STYLES
@@ -24,7 +35,8 @@
     /*overflow: hidden;*/
 }
 
-.jigsaw > div {
+.jigsaw > div,
+.jigsaw > a {
     float: left;
     position: absolute;
     font-size: 20px;
@@ -34,7 +46,8 @@
     display: none;
 }
 
-.jigsaw > div:hover {
+.jigsaw > div:hover,
+.jigsaw > a:hover {
     opacity: 0.8;
 }
 

@@ -1,10 +1,11 @@
 /*global  JGSW */
-JGSW("ElementsController", function (s, u, e) {
+JGSW("ElementsController", function (s, u, e, a) {
     'use strict';
 
     var Settings = s,
         Utils = u,
         Events = e,
+        Animation = a,
         cachedData,
         $parent = document.querySelector(".jigsaw"),
         $children = $parent.querySelectorAll("." + Settings.classnames.tiles),
@@ -87,16 +88,15 @@ JGSW("ElementsController", function (s, u, e) {
                 $children[i].style.left = tiles[i].l + "px";
                 $children[i].style.top = tiles[i].t + "px";
                 $children[i].style.display = tiles[i].display;
-                //$children[i].innerHTML = i;
 
-                // if (Settings.animate) {
-                //     $(tileElements[i]).addClass("animate");
-                // }
+                if (Settings.animate) {
+                    Utils.addClass($children[i], "animate");
+                }
             }
 
-            // if (Settings.animate) {
-            //     this.animationController();
-            // }
+            if (Settings.animate) {
+                Animation.start($children);
+            }
         },
 
         appendData: function (data) {

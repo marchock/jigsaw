@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html>
-
     <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-    <title>JIGSAW - JSON</title>
-    <link href="../css/screen.css" rel="stylesheet" type="text/css" />
-    <link href="../css/jigsaw.css" rel="stylesheet" type="text/css" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+        <title>JIGSAW - JSON</title>
+        <link href="css/screen.css" rel="stylesheet" type="text/css" />
+        <link href="css/jigsaw.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <h1>Jigsaw JSON Endpoint Example</h1>
+        <h1>Jigsaw JSON Example</h1>
         <p>To make a JSON request please run on a server to display this example</p>
-        <p>open console.log to view endpoint string</p>
-        <div class="container">
         <form class="json-form" action="">
         <!--  select name must match json file -->
             <select class="option1" name="classname">
@@ -28,6 +25,7 @@
                 <option value="filter2">filter2</option>
             </select>
         </form>
+        <div class="container">
             <div class="jigsaw"></div>
         </div>
 
@@ -36,6 +34,7 @@
         <!-- inject:js -->
         <script src="js/Jigsaw.js"></script>
         <script src="js/jgsw.js"></script>
+        <script src="js/Jigsaw/AnimationController.js"></script>
         <script src="js/Jigsaw/BreakPoints.js"></script>
         <script src="js/Jigsaw/DataController.js"></script>
         <script src="js/Jigsaw/ElementsController.js"></script>
@@ -47,18 +46,24 @@
         <script src="js/Jigsaw/TileConstructor.js"></script>
         <script src="js/Jigsaw/Utils.js"></script>
         <!-- endinject -->
-        
+
         <script type="text/javascript">
 
         var j = new Jigsaw({
+
+                    element: ".jigsaw",
 
                     getWidthFrom: ".container",
 
                     getDataFrom: "json",
 
-                    urlEndPoint: true,
+                    filter: true,
 
-                    url: "../data/tiles.json",
+                    url: "data/tiles.json",
+
+                    animate: {
+                        frameRate: 16
+                    },                    
 
                     tileTemplate: function (data , parent) {
                         //console.log(data.classname)
@@ -114,7 +119,6 @@
                     ]
 
                 });
-
         </script>
     </body>
 </html>

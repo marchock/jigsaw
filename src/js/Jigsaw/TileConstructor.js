@@ -71,7 +71,6 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
             }
 
             Grid.resetgrid();
-            Settings.startLoop = 0;
             this.updateGrid();
         },
 
@@ -221,8 +220,9 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
             Settings.tileWidth += Math.floor((w - (Settings.tileWidth * Settings.cols)) / Settings.cols);
 
 
-            // reset start loop to zero
-            Settings.startLoop = 0;
+            if (Settings.getDataFrom !== "page") {
+                Settings.startLoop = 0;
+            } 
 
             // NOTE --- FIRST LOAD
 
@@ -303,7 +303,7 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
 
                     Elements.appendData(data);
 
-                    Settings.startLoop = Settings.eof;
+                    Settings.startLoop = Settings.stopPoint;
 
                     Settings.stopPoint = Elements.getLength();
 
@@ -312,7 +312,6 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
                     if (Settings.page.num >= Settings.page.end) {
                         Elements.hide("loadMore");
                     }
-
 
                     Data.html();
                 });

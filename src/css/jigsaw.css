@@ -31,7 +31,7 @@
     background-color: #DDD;
     margin: auto;
     position: relative;
-
+    -webkit-transform: translate3d(0,0,0);
     /*overflow: hidden;*/
 }
 
@@ -44,6 +44,7 @@
     opacity: 1;
     background-color: red;
     display: none;
+
 }
 
 .jigsaw > div:hover,

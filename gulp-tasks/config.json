@@ -1,0 +1,15 @@
+{
+    "styles": {
+        "src": "src/scss/**/*.scss",
+        "dest": "dest/css",
+        "dev": "src/css"
+    },
+    "scripts": {
+        "require": {
+            "baseUrl": "src/js/",
+            "mainConfigFile": "src/js/main.js",
+            "out": "dest/js/main.js",
+            "dest": "dest/js/"
+        }
+    }
+}
