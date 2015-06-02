@@ -1,12 +1,12 @@
 /*global  JGSW */
-JGSW("TileConstructor", function (s, u, g, e, r, d) {
+JGSW("TileConstructor", function (s, u, g, e, r, o) {
     'use strict';
     var Settings = s,
         Utils = u,
         Grid = g,
         Elements = e,
         Request = r,
-        Data = d,
+        Optn = o,
         Tiles = [],
         me;
 
@@ -14,7 +14,7 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
 
         setup: function (data) {
             // (me = this) to handle scope issues from event calls
-            // .addMore() method is where it is used, event is called from Events Controller
+            // .addMore() event is called from Events Controller
             me = this;
 
             // reset tiles;
@@ -28,15 +28,13 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
                 h = 0,
                 classname;
 
-            //Settings.stopPoint = (Settings.stopPoint > eof) ? eof : Settings.stopPoint;
-
             if (Settings.stopPoint > eof) {
                 Settings.stopPoint = eof;
-                if (Settings.getDataFrom !== "page") {
+                if (Settings.select.option !== "page") {
                     Elements.hide("loadMore");
                 }
             } else {
-                if (Settings.getDataFrom !== "page") {
+                if (Settings.select.option !== "page") {
                     Elements.show("loadMore");
                 }
             }
@@ -209,9 +207,9 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
         // this is triggered from the breakpoints object
         updateSettings: function (w, index, ele) {
 
-            Settings.spacing = Settings.resize[index].tileSpace;
-            Settings.tileWidth = Settings.resize[index].tileWidth;
-            Settings.tileHeight = Settings.resize[index].tileHeight;
+            Settings.padding = Settings.breakpoints[index].tile.padding;
+            Settings.tileWidth = Settings.breakpoints[index].tile.width;
+            Settings.tileHeight = Settings.breakpoints[index].tile.height;
 
             // calculate the number of columns (MAth.floor rounds the number down)
             Settings.cols = Math.floor(w / Settings.tileWidth);
@@ -220,9 +218,9 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
             Settings.tileWidth += Math.floor((w - (Settings.tileWidth * Settings.cols)) / Settings.cols);
 
 
-            if (Settings.getDataFrom !== "page") {
+            if (Settings.select.option !== "page") {
                 Settings.startLoop = 0;
-            } 
+            }
 
             // NOTE --- FIRST LOAD
 
@@ -240,28 +238,28 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
 
         updateTile: function (index, row, column) {
 
-            // showGutter: if guttering is false then the spacing removed must be divided evenly across all tiles
+            // showGutter: if guttering is false then the padding removed must be divided evenly across all tiles
 
-                // calculate spacing between tiles
-            var spacing = Settings.showGutter ? (Settings.spacing / 2) : Math.floor(Settings.spacing / Settings.cols),
+                // calculate padding between tiles
+            var padding = Settings.showGutter ? (Settings.padding / 2) : Math.floor(Settings.padding / Settings.cols),
 
                 // calculate tile width
-                tileWidth = Settings.showGutter ? Settings.tileWidth : (Settings.tileWidth + spacing),
+                tileWidth = Settings.showGutter ? Settings.tileWidth : (Settings.tileWidth + padding),
 
                 // calculate tile height
-                tileHeight = Settings.showGutter ? Settings.tileHeight : (Settings.tileHeight + spacing),
+                tileHeight = Settings.showGutter ? Settings.tileHeight : (Settings.tileHeight + padding),
 
                 // calculate top position
-                top = Settings.showGutter ? (row * Settings.tileHeight) + spacing : (row * (Settings.tileHeight + spacing)),
+                top = Settings.showGutter ? (row * Settings.tileHeight) + padding : (row * (Settings.tileHeight + padding)),
 
                 // calculate left position
-                left = Settings.showGutter ? (column * Settings.tileWidth) + spacing : (column * (Settings.tileWidth + spacing)),
+                left = Settings.showGutter ? (column * Settings.tileWidth) + padding : (column * (Settings.tileWidth + padding)),
 
                 // calculate tile width
-                w = ((tileWidth * Tiles[index].w) - Settings.spacing),
+                w = ((tileWidth * Tiles[index].w) - Settings.padding),
 
                 // calculate tile height
-                h = ((tileHeight * Tiles[index].h) - Settings.spacing);
+                h = ((tileHeight * Tiles[index].h) - Settings.padding);
 
             // Update tile object
             Tiles[index].created = true;
@@ -275,13 +273,13 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
         addMore: function () {
             // (me = this) to handle scope issues from event calls
 
-            switch (Settings.getDataFrom) {
+            switch (Settings.select.option) {
 
             case "html":
 
-                if ((Settings.stopPoint + Settings.loadNumOfTiles) < Tiles.length) {
+                if ((Settings.stopPoint + Settings.load.index) < Tiles.length) {
 
-                    Settings.stopPoint += Settings.loadNumOfTiles;
+                    Settings.stopPoint += Settings.load.index;
 
                 } else {
                     // hide load more button
@@ -289,7 +287,7 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
                     Settings.stopPoint = Tiles.length;
                 }
 
-                Settings.startLoop += Settings.loadNumOfTiles;
+                Settings.startLoop += Settings.load.index;
 
                 me.showMore();
 
@@ -297,7 +295,7 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
 
             case "page":
 
-                Settings.page.num += 1;
+                Settings.select.pageIndex += 1;
 
                 Request.page(Settings, function (data) {
 
@@ -309,20 +307,20 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
 
                     Settings.eof = Elements.getLength();
 
-                    if (Settings.page.num >= Settings.page.end) {
+                    if (Settings.select.pageIndex >= Settings.select.pageEnd) {
                         Elements.hide("loadMore");
                     }
 
-                    Data.html();
+                    Optn.html();
                 });
 
                 break;
 
             case "json":
 
-                if ((Settings.stopPoint + Settings.loadNumOfTiles) < Tiles.length) {
+                if ((Settings.stopPoint + Settings.load.index) < Tiles.length) {
 
-                    Settings.stopPoint += Settings.loadNumOfTiles;
+                    Settings.stopPoint += Settings.load.index;
 
                 } else {
                     // hide load more button
@@ -330,7 +328,7 @@ JGSW("TileConstructor", function (s, u, g, e, r, d) {
                     Settings.stopPoint = Tiles.length;
                 }
 
-                Settings.startLoop += Settings.loadNumOfTiles;
+                Settings.startLoop += Settings.load.index;
 
                 Elements.createHTMLElements();
 

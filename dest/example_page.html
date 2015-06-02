@@ -43,21 +43,45 @@
 
         var j = new Jigsaw({
 
-                    getWidthFrom: ".container",
-
-                    getDataFrom: "page",
-
-                    page: {
+                    select: {
+                        option: "page",
                         url: "data/html/page-",
-                        num: 1,
-                        end: 4
+                        pageIndex: 1,
+                        pageEnd: 4
                     },
 
-                    animate: {
-                        frameRate: 16
+                    load: {
+                        btn: true,
+                        animate: true,
+                        framerate: 16
                     },
 
-                    loadMore: true,
+                    breakpoints: [
+                        {
+                            position: 320,
+                            tile: {
+                                width: 120,
+                                height: 120,
+                                padding: 8
+                            }
+                        },
+                        {
+                            position: 480,
+                            tile: {
+                                width: 160,
+                                height: 130,
+                                padding: 10
+                            }
+                        },
+                        {
+                            position: 1200,
+                            tile: {
+                                width: 200,
+                                height: 180,
+                                padding: 18
+                            }
+                        }
+                    ],
 
                     tile: [
                         {
@@ -69,28 +93,6 @@
                             classname: "smallitem",
                             w: 1,
                             h: 1
-                        }
-                    ],
-
-                    resize: [
-                        {
-                            breakpoint: 320,
-                            tileWidth: 120,
-                            tileHeight: 120,
-                            tileSpace: 8
-                        },
-                        {
-                            breakpoint: 480,
-                            tileWidth: 150,
-                            tileHeight: 120,
-                            tileSpace: 10
-                        },
-
-                        {
-                            breakpoint: 1200,
-                            tileWidth: 200,
-                            tileHeight: 120,
-                            tileSpace: 18
                         }
                     ]
 

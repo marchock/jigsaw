@@ -18,12 +18,11 @@ JGSW("AnimationController", function (s, u) {
         loop: function () {
             if (counter < Settings.stopPoint) {
 
-                this.jigsawTimer(1000 / Settings.animate.frameRate);
+                this.jigsawTimer(1000 / Settings.load.framerate);
 
             } else {
                 //this.settings.cb("animation completed");
-                
-                this.removeClassFromElements()
+                this.removeClassFromElements();
             }
         },
 

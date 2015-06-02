@@ -19,7 +19,7 @@ JGSW("DataRequest", function () {
                     callBack(xmlhttp.responseText);
                 }
             };
-            xmlhttp.open("GET", Settings.page.url + Settings.page.num + ".html", true);
+            xmlhttp.open("GET", Settings.select.url + Settings.select.pageIndex + ".html", true);
             xmlhttp.send();
         },
 

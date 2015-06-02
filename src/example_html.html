@@ -67,11 +67,11 @@
         <script src="js/jgsw.js"></script>
         <script src="js/Jigsaw/AnimationController.js"></script>
         <script src="js/Jigsaw/BreakPoints.js"></script>
-        <script src="js/Jigsaw/DataController.js"></script>
         <script src="js/Jigsaw/ElementsController.js"></script>
         <script src="js/Jigsaw/EventsController.js"></script>
         <script src="js/Jigsaw/Extend.js"></script>
         <script src="js/Jigsaw/Grid.js"></script>
+        <script src="js/Jigsaw/OptionController.js"></script>
         <script src="js/Jigsaw/Request.js"></script>
         <script src="js/Jigsaw/Settings.js"></script>
         <script src="js/Jigsaw/TileConstructor.js"></script>
@@ -83,19 +83,43 @@
 
         var j = new Jigsaw({
 
-                    element: ".jigsaw",
-
-                    getWidthFrom: ".container",
-
-                    getDataFrom: "html",
-
-                    loadMore: true,
-
-                    loadNumOfTiles: 20,
-
-                    animate: {
-                        frameRate: 16
+                    select: {
+                        option: "html",
                     },
+
+                    load: {
+                        btn: true,
+                        index: 20,
+                        animate: true,
+                        framerate: 16
+                    },
+
+                    breakpoints: [
+                        {
+                            position: 320,
+                            tile: {
+                                width: 120,
+                                height: 120,
+                                padding: 8
+                            }
+                        },
+                        {
+                            position: 480,
+                            tile: {
+                                width: 160,
+                                height: 130,
+                                padding: 10
+                            }
+                        },
+                        {
+                            position: 1200,
+                            tile: {
+                                width: 200,
+                                height: 180,
+                                padding: 18
+                            }
+                        }
+                    ],
 
                     tile: [
                         {
@@ -107,28 +131,6 @@
                             classname: "smallitem",
                             w: 1,
                             h: 1
-                        }
-                    ],
-
-                    resize: [
-                        {
-                            breakpoint: 320,
-                            tileWidth: 120,
-                            tileHeight: 120,
-                            tileSpace: 8
-                        },
-                        {
-                            breakpoint: 480,
-                            tileWidth: 150,
-                            tileHeight: 130,
-                            tileSpace: 10
-                        },
-
-                        {
-                            breakpoint: 1200,
-                            tileWidth: 200,
-                            tileHeight: 180,
-                            tileSpace: 18
                         }
                     ]
                 });

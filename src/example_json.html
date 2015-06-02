@@ -36,11 +36,11 @@
         <script src="js/jgsw.js"></script>
         <script src="js/Jigsaw/AnimationController.js"></script>
         <script src="js/Jigsaw/BreakPoints.js"></script>
-        <script src="js/Jigsaw/DataController.js"></script>
         <script src="js/Jigsaw/ElementsController.js"></script>
         <script src="js/Jigsaw/EventsController.js"></script>
         <script src="js/Jigsaw/Extend.js"></script>
         <script src="js/Jigsaw/Grid.js"></script>
+        <script src="js/Jigsaw/OptionController.js"></script>
         <script src="js/Jigsaw/Request.js"></script>
         <script src="js/Jigsaw/Settings.js"></script>
         <script src="js/Jigsaw/TileConstructor.js"></script>
@@ -51,37 +51,45 @@
 
         var j = new Jigsaw({
 
-                    element: ".jigsaw",
-
-                    getWidthFrom: ".container",
-
-                    getDataFrom: "json",
-
-                    filter: true,
-
-                    url: "data/tiles.json",
-
-                    animate: {
-                        frameRate: 16
-                    },                    
-
-                    tileTemplate: function (data , parent) {
-                        //console.log(data.classname)
-                        var e = document.createElement("div"),
-                            p = document.createElement("p"),
-                            t = document.createTextNode("text");
-
-
-                        e.setAttribute("class", "item " + data.classname);
-                        e.innerHTML = data.html;
-                        parent.appendChild(e);
+                    select: {
+                        option: "json",
+                        url: "data/tiles.json",
+                        filter: true
                     },
 
-                    loadMore: true,
+                    load: {
+                        btn: true,
+                        index: 20,
+                        animate: true,
+                        framerate: 16
+                    },
 
-                    loadNumOfTiles: 20,
-
-                    showGutter: true,
+                    breakpoints: [
+                        {
+                            position: 320,
+                            tile: {
+                                width: 120,
+                                height: 120,
+                                padding: 8
+                            }
+                        },
+                        {
+                            position: 480,
+                            tile: {
+                                width: 160,
+                                height: 130,
+                                padding: 10
+                            }
+                        },
+                        {
+                            position: 1200,
+                            tile: {
+                                width: 200,
+                                height: 180,
+                                padding: 18
+                            }
+                        }
+                    ],
 
                     tile: [
                         {
@@ -96,27 +104,16 @@
                         }
                     ],
 
-                    resize: [
-                        {
-                            breakpoint: 320,
-                            tileWidth: 120,
-                            tileHeight: 120,
-                            tileSpace: 8
-                        },
-                        {
-                            breakpoint: 480,
-                            tileWidth: 150,
-                            tileHeight: 120,
-                            tileSpace: 10
-                        },
+                    tileTemplate: function (data , parent) {
+                        var e = document.createElement("div"),
+                            p = document.createElement("p"),
+                            t = document.createTextNode("text");
 
-                        {
-                            breakpoint: 1200,
-                            tileWidth: 200,
-                            tileHeight: 120,
-                            tileSpace: 18
-                        }
-                    ]
+
+                        e.setAttribute("class", "item " + data.classname);
+                        e.innerHTML = data.html;
+                        parent.appendChild(e);
+                    }
 
                 });
         </script>

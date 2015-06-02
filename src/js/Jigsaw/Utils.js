@@ -2,7 +2,7 @@
 JGSW("Utils", function (s) {
     'use strict';
 
-    var settings = s;
+    var Settings = s;
 
     return {
         getWidth: function () {
@@ -13,16 +13,16 @@ JGSW("Utils", function (s) {
 
             var w;
 
-            if (settings.getWidthFrom) {
+            if (Settings.classnames.container) {
 
-                w = this.getComputedStyle(document.querySelector(settings.getWidthFrom));
+                w = this.getComputedStyle(document.querySelector(Settings.classnames.container));
 
             } else {
 
                 w = this.getComputedStyle(document.getElementsByTagName("body")[0]);
             }
 
-            w = w > settings.resize[0].breakpoint ? w : settings.resize[0].breakpoint;
+            w = w > Settings.breakpoints[0].position ? w : Settings.breakpoints[0].position;
 
             return w;
         },
@@ -63,7 +63,7 @@ JGSW("Utils", function (s) {
             var width = this.getWidth();
 
             if (w > width) {
-                w = (settings.tileWidth * settings.cols) - settings.spacing;
+                w = (Settings.tileWidth * Settings.cols) - Settings.padding;
             }
             return w;
         },
@@ -129,7 +129,9 @@ JGSW("Utils", function (s) {
         },
 
         addClass: function (ele, cls) {
-            if (!this.hasClass(ele, cls)) ele.className += " " + cls;
+            if (!this.hasClass(ele, cls)) {
+                ele.className += " " + cls;
+            }
         },
 
         removeClass: function (ele, cls) {

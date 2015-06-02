@@ -3,31 +3,50 @@ JGSW("Settings", function () {
     'use strict';
     return {
 
+        showGutter: true,
+
         classnames: {
+            container: ".container",
             tiles: "item", // do not include the dot
             formElement: ".json-form",
             btnLoadMore: ".load-more"
         },
 
-        getDataFrom: "html",
+        select: {
 
-        url: "",
+            option: "HTML",
 
-        urlEndPoint: false,
-
-        filter: false,
-
-        loadNumOfTiles: null,
-
-        getWidthFrom: "",
-
-        showGutter: true,
-
-        page: {
             url: "",
-            num: 1,
-            end: 2
+
+            filter: false,
+
+            urlEndPoint: false,
+
+            pageIndex: 1,
+
+            pageEnd: 2
+
         },
+
+        load: {
+            btn: false,
+            scroll: false,
+            index: null,
+            animate: false,
+            framerate: 16
+        },
+
+        breakpoints: [
+            {
+                position: 320,
+                tile: {
+                    width: 120,
+                    height: 120,
+                    padding: 8
+                }
+            }
+        ],
+
 
         tile: [
             {
@@ -52,20 +71,7 @@ JGSW("Settings", function () {
             }
         ],
 
-        resize: [
-            {
-                breakpoint: 320,
-                tileWidth: 160,
-                tileHeight: 160,
-                tileSpace: 8
-            }
-        ],
-
-        animate: false,
-
-        scroll: false,
-
-        loadMore: false,
+        padding: 0,
 
         cols: 0,
 

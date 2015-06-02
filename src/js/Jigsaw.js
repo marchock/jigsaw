@@ -7,20 +7,20 @@ function Jigsaw(options) {
 Jigsaw.prototype.init = function (options) {
     'use strict';
     var settings = this.Extend(this.Settings(), options);
-    settings.stopPoint = settings.loadNumOfTiles;
-    settings.eof = settings.loadNumOfTiles;
+    settings.stopPoint = settings.load.index;
+    settings.eof = settings.load.index;
 
     var utils = new this.Utils(settings),
-        data = new this.DataController(),
+        option = new this.OptionController(),
         events = new this.EventsController(),
         request = new this.DataRequest(),
         animation = new this.AnimationController(settings, utils),
         elements = new this.ElementsController(settings, utils, events, animation),
         grid = new this.GridController(settings, utils, elements),
-        tiles = new this.TileConstructor(settings, utils, grid, elements, request, data),
+        tiles = new this.TileConstructor(settings, utils, grid, elements, request, option),
         breakPoints = new this.BreakPoints(settings, utils, tiles);
 
     events.getMethod(tiles, "addMore");
-    events.getMethod(data, "json");
-    data.init(settings, elements, tiles, breakPoints, request);
+    events.getMethod(option, "json");
+    option.init(settings, elements, tiles, breakPoints, request);
 };

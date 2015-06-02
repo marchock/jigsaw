@@ -12,14 +12,14 @@ JGSW("ElementsController", function (s, u, e, a) {
         $btnLoadMore = document.querySelector(Settings.classnames.btnLoadMore),
         $form = document.querySelector(Settings.classnames.formElement);
 
-    if (Settings.loadMore) {
+    if (Settings.load.btn) {
         Events.loadMoreBtn($btnLoadMore, "click");
     }
 
     /*
      * Loop through form and find elements (radio and select) to attach events to
      */
-    if (Settings.filter || Settings.urlEndPoint) {
+    if (Settings.select.filter || Settings.select.urlEndPoint) {
 
         var ele = $form.elements,
             c = 0,
@@ -40,7 +40,7 @@ JGSW("ElementsController", function (s, u, e, a) {
             }
 
             if (createEvent) {
-                Events.filterGrid(ele[c], "change", Settings.filter);
+                Events.filterGrid(ele[c], "change", Settings.select.filter);
             }
         }
     }
@@ -89,12 +89,12 @@ JGSW("ElementsController", function (s, u, e, a) {
                 $children[i].style.top = tiles[i].t + "px";
                 $children[i].style.display = tiles[i].display;
 
-                if (Settings.animate) {
+                if (Settings.load.animate) {
                     Utils.addClass($children[i], "animate");
                 }
             }
 
-            if (Settings.animate) {
+            if (Settings.load.animate) {
                 Animation.start($children);
             }
         },
@@ -130,7 +130,7 @@ JGSW("ElementsController", function (s, u, e, a) {
             switch (string) {
 
             case "loadMore":
-                if (Settings.loadMore) {
+                if (Settings.load.btn) {
                     $btnLoadMore.style.display = "none";
                 }
                 break;
@@ -141,7 +141,7 @@ JGSW("ElementsController", function (s, u, e, a) {
             switch (string) {
 
             case "loadMore":
-                if (Settings.loadMore) {
+                if (Settings.load.btn) {
                     $btnLoadMore.style.display = "block";
                 }
                 break;

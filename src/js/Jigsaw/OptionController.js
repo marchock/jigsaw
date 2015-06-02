@@ -1,6 +1,8 @@
 /*global  JGSW */
 
-JGSW("DataController", function () {
+//NOTE: rename to SelectController or option controller
+
+JGSW("OptionController", function () {
     'use strict';
 
     var Settings,
@@ -19,7 +21,7 @@ JGSW("DataController", function () {
             BreakPoints = b;
             Request = r;
 
-            switch (Settings.getDataFrom) {
+            switch (Settings.select.option) {
             case "html":
             case "page":
                 this.html();
@@ -39,10 +41,10 @@ JGSW("DataController", function () {
                 data = [],
                 string = "";
 
-            if (Settings.getDataFrom === "page") {
-                // page load all tiles inside jigsaw 
+            if (Settings.select.option === "page") {
+                // page load all tiles inside jigsaw
                 // Setting update with element.length number
-                Settings.loadNumOfTiles = eof;
+                Settings.load.index = eof;
                 Settings.stopPoint = eof;
                 Settings.eof = eof;
             }
@@ -65,23 +67,21 @@ JGSW("DataController", function () {
             var filteredData = [],
                 url = "";
 
-            if (Settings.urlEndPoint) {
-                url = Settings.url + "?" + Elements.getFormData("serialize");
+            if (Settings.select.urlEndPoint) {
+                url = Settings.select.url + "?" + Elements.getFormData("serialize");
                 console.log(url);
             } else {
-                url = Settings.url;
+                url = Settings.select.url;
             }
 
-            Settings.stopPoint = Settings.loadNumOfTiles;
+            Settings.stopPoint = Settings.load.index;
             Settings.startLoop = 0;
 
             if (!DataCached) {
                 Request.json(url, function (data) {
 
-                    // only cache data for when Settings.filter is true
-                    DataCached = Settings.filter ? data : DataCached;
-
-
+                    // only cache data for when Settings.select.filter is true
+                    DataCached = Settings.select.filter ? data : DataCached;
                     Tiles.setup(data.tiles);
                     Elements.createHTMLElements(data.tiles);
                     BreakPoints.browserResize();
