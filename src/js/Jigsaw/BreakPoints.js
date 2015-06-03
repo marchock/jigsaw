@@ -1,3 +1,4 @@
+/*global  JGSW */
 JGSW("BreakPoints", function (s, utils, tiles) {
     'use strict';
     var bwbp = [],
@@ -5,14 +6,14 @@ JGSW("BreakPoints", function (s, utils, tiles) {
 
     (function () {
         var i = 0,
-            eof = settings.resize.length,
-            start = 0,
-            end = 0;
+            eof = settings.breakpoints.length,
+            startPosition = 0,
+            endPosition = 0;
 
         for (i = 0; i < eof; i += 1) {
-            start = settings.resize[i].breakpoint;
-            end = eof > (i + 1) ? (settings.resize[i + 1].breakpoint - 1) : 10000;
-            bwbp.push([start, end]);
+            startPosition = settings.breakpoints[i].position;
+            endPosition = eof > (i + 1) ? (settings.breakpoints[i + 1].position - 1) : 10000;
+            bwbp.push([startPosition, endPosition]);
         }
     }());
 
@@ -27,7 +28,7 @@ JGSW("BreakPoints", function (s, utils, tiles) {
                 index = 0;
 
             // find which tile size to use
-            for (i = 0; i < settings.resize.length; i += 1) {
+            for (i = 0; i < settings.breakpoints.length; i += 1) {
                 if (bwbp[i][1] >= w &&
                         bwbp[i][0] < w) {
                     index = i;
@@ -54,12 +55,12 @@ JGSW("BreakPoints", function (s, utils, tiles) {
 
                     me.browserResize();
 
-                } else if (breakpoints[1] >= w && w >= settings.resize[0].breakpoint) {
+                } else if (breakpoints[1] >= w && w >= settings.breakpoints[0].position) {
 
                     me.browserResize();
                 }
 
             }, 10); // if performance issues for loading increase interval time
-        },
+        }
     };
 });

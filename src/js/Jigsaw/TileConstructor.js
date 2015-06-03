@@ -241,13 +241,14 @@ JGSW("TileConstructor", function (s, u, g, e, r, o) {
             // showGutter: if guttering is false then the padding removed must be divided evenly across all tiles
 
                 // calculate padding between tiles
-            var padding = Settings.showGutter ? (Settings.padding / 2) : Math.floor(Settings.padding / Settings.cols),
+            var padding = Settings.showGutter ? (Settings.padding / 2) : (Settings.padding / Settings.cols),
 
                 // calculate tile width
                 tileWidth = Settings.showGutter ? Settings.tileWidth : (Settings.tileWidth + padding),
 
                 // calculate tile height
                 tileHeight = Settings.showGutter ? Settings.tileHeight : (Settings.tileHeight + padding),
+                //tileHeight = Settings.tileHeight,
 
                 // calculate top position
                 top = Settings.showGutter ? (row * Settings.tileHeight) + padding : (row * (Settings.tileHeight + padding)),
@@ -261,6 +262,9 @@ JGSW("TileConstructor", function (s, u, g, e, r, o) {
                 // calculate tile height
                 h = ((tileHeight * Tiles[index].h) - Settings.padding);
 
+                // this is used to calculate the container height
+                Settings.modifyTileHeight = tileHeight;
+
             // Update tile object
             Tiles[index].created = true;
             Tiles[index].t = top;
@@ -268,10 +272,16 @@ JGSW("TileConstructor", function (s, u, g, e, r, o) {
             Tiles[index].cssWidth = w;
             Tiles[index].cssHeight = h;
             Tiles[index].created = true;
+
         },
 
         addMore: function () {
             // (me = this) to handle scope issues from event calls
+
+            // framerate defualt value is null
+            if (Settings.load.framerate) {
+                Settings.load.animate = true;
+            }
 
             switch (Settings.select.option) {
 

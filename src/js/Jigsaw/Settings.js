@@ -3,7 +3,7 @@ JGSW("Settings", function () {
     'use strict';
     return {
 
-        showGutter: true,
+        showGutter: false,
 
         classnames: {
             container: ".container",
@@ -25,7 +25,6 @@ JGSW("Settings", function () {
             pageIndex: 1,
 
             pageEnd: 2
-
         },
 
         load: {
@@ -33,7 +32,7 @@ JGSW("Settings", function () {
             scroll: false,
             index: null,
             animate: false,
-            framerate: 16
+            framerate: null
         },
 
         breakpoints: [
@@ -70,6 +69,8 @@ JGSW("Settings", function () {
                 h: 2
             }
         ],
+
+        modifyTileHeight: 0,
 
         padding: 0,
 

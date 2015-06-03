@@ -91,7 +91,12 @@ JGSW("GridController", function (s, u, e) {
 
 
         removeEmptyRows: function () {
-            var i, c, ii, d = [];
+            var i,
+                c,
+                ii,
+                d = [],
+                height = 0;
+
             // search rows for empty columns 
             for (i = 0; i < grid.length; i += 1) {
                 c = 0;
@@ -114,7 +119,8 @@ JGSW("GridController", function (s, u, e) {
                 grid.splice(d[i], 1);
             }
 
-            elements.updateHeight(grid.length * settings.tileHeight); // TODO: UPDATE TO TILE HEIGHT 
+            height = settings.showGutter ? (grid.length * settings.modifyTileHeight) : ((grid.length * settings.modifyTileHeight) - settings.padding)
+            elements.updateHeight(height);
         },
 
         newRow: function (array) {

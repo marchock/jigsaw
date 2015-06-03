@@ -14,6 +14,11 @@ JGSW("ElementsController", function (s, u, e, a) {
 
     if (Settings.load.btn) {
         Events.loadMoreBtn($btnLoadMore, "click");
+
+        if (Settings.load.animate && !Settings.load.framerate) {
+            //setDefault value
+            Settings.load.framerate = 16;
+        }
     }
 
     /*
@@ -95,7 +100,11 @@ JGSW("ElementsController", function (s, u, e, a) {
             }
 
             if (Settings.load.animate) {
+
                 Animation.start($children);
+
+                // stop browser resizing triggering animation
+                Settings.load.animate = false;
             }
         },
 
