@@ -8,3 +8,7 @@ requireDir('./gulp-tasks');
 gulp.task('default', ['inject-src', 'clean'], function() {
     gulp.start("scripts", "copy", "inject-script-dest");
 });
+
+
+ 
+
