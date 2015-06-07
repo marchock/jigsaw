@@ -119,7 +119,7 @@ JGSW("GridController", function (s, u, e) {
                 grid.splice(d[i], 1);
             }
 
-            height = settings.showGutter ? (grid.length * settings.modifyTileHeight) : ((grid.length * settings.modifyTileHeight) - settings.padding)
+            height = settings.showGutter ? (grid.length * settings.modifyTileHeight) : ((grid.length * settings.modifyTileHeight) - settings.padding);
             elements.updateHeight(height);
         },
 
