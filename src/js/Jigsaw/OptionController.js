@@ -1,8 +1,8 @@
-/*global  JGSW */
+
 
 //NOTE: rename to SelectController or option controller
 
-JGSW("OptionController", function () {
+module.exports =  function () {
     'use strict';
 
     var Settings,
@@ -117,4 +117,4 @@ JGSW("OptionController", function () {
             }
         }
     };
-});
+};

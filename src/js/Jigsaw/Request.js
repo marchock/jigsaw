@@ -1,5 +1,5 @@
-/*global JGSW, window, XMLHttpRequest, ActiveXObject  */
-JGSW("DataRequest", function () {
+
+module.exports =  function () {
     'use strict';
 
     var xmlhttp;
@@ -35,4 +35,4 @@ JGSW("DataRequest", function () {
             xmlhttp.send();
         }
     };
-});
+};

@@ -1,5 +1,5 @@
-/*global  JGSW */
-JGSW("GridController", function (s, u, e) {
+
+module.exports =  function (s, u, e) {
     'use strict';
     var grid = [],
         settings = s,
@@ -131,4 +131,4 @@ JGSW("GridController", function (s, u, e) {
             return grid.length;
         }
     };
-});
+};

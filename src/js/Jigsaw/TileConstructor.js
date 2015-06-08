@@ -1,5 +1,5 @@
-/*global  JGSW */
-JGSW("TileConstructor", function (s, u, g, e, r, o) {
+
+module.exports =  function (s, u, g, e, r, o) {
     'use strict';
     var Settings = s,
         Utils = u,
@@ -379,4 +379,4 @@ JGSW("TileConstructor", function (s, u, g, e, r, o) {
             this.updateGrid();
         }
     };
-});
+};

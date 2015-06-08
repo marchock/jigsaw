@@ -1,5 +1,5 @@
-/*global  JGSW */
-JGSW("Settings", function () {
+
+module.exports =  function () {
     'use strict';
     return {
 
@@ -86,4 +86,4 @@ JGSW("Settings", function () {
 
         startLoop: 0
     };
-});
+};

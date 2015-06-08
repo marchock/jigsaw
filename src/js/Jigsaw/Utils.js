@@ -1,5 +1,5 @@
-/*global JGSW */
-JGSW("Utils", function (s) {
+
+module.exports =  function (s) {
     'use strict';
 
     var Settings = s;
@@ -141,4 +141,4 @@ JGSW("Utils", function (s) {
             }
         }
     };
-});
+};

@@ -1,5 +1,6 @@
-/*global  JGSW */
-JGSW("AnimationController", function (s, u) {
+
+module.exports = function (s, u) {
+    
     'use strict';
 
     var Settings = s,
@@ -54,4 +55,4 @@ JGSW("AnimationController", function (s, u) {
             }, time);
         }
     };
-});
+};

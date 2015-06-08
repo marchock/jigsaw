@@ -1,5 +1,5 @@
-/*global  JGSW */
-JGSW("ElementsController", function (s, u, e, a) {
+
+module.exports = function (s, u, e, a) {
     'use strict';
 
     var Settings = s,
@@ -157,4 +157,4 @@ JGSW("ElementsController", function (s, u, e, a) {
             }
         }
     };
-});
+};

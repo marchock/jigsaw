@@ -1,5 +1,5 @@
-/*global  JGSW */
-JGSW("BreakPoints", function (s, utils, tiles) {
+
+module.exports = function (s, utils, tiles) {
     'use strict';
     var bwbp = [],
         settings = s;
@@ -63,4 +63,4 @@ JGSW("BreakPoints", function (s, utils, tiles) {
             }, 10); // if performance issues for loading increase interval time
         }
     };
-});
+};

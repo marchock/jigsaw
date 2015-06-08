@@ -1,5 +1,5 @@
-/*global  JGSW */
-JGSW("EventsController", function () {
+
+module.exports =  function () {
     'use strict';
     var btnAddMore,
         filterObject;
@@ -41,4 +41,4 @@ JGSW("EventsController", function () {
             });
         }
     };
-});
+};
