@@ -1,42 +1,29 @@
 
-#####Gulp - Installation Instructions
------------
-######To install Gulp globally: $ npm install gulp -g
-To install dependencies:
-- npm install
-
-
-View html pages using gulp-webserver
-- gulp webserver
-
-------
-
-jigsaw - responsive grid layout
+**jigsaw - responsive grid layout**
 =====
-- three options to create grid elements
-- define the number of grid elements to load at a time
-- inherit a width from a containing element if specified
-- hide and show outer guttering
-- Can assign a class name, for each grid element dimensions
-- Can set break points to resize grid elements according to your specification
-- turn animations on and off
-- options to load further grid elements by activating load more button
-- can specify a class name referring to all grid elements
+
+This JavaScript plugin with no dependencies enables the creation of fast loading responsive grid layouts.
 
 
--------------------------
+**Features**
+
+- Can create responsive grid layouts using HTML or JSON
+- Show and hide gutter width
+- Can specify the number of tiles to load at one time in the grid
+- Filtering is available using an HTML form
+- Can set breakpoints to determine tile height, width and padding
+- Assign a class name for each tile size
 
 
-Three options to create grid elements:
+**Three options to create a grid**
+------------
 
 ```
-var j = new Jigsaw(
-    {
-        select: {
-            option: "html",
-        }
+var j = new Jigsaw({
+    select: {
+        option: "",
     }
-);
+});
 
 1. html
 2. page
@@ -45,13 +32,11 @@ var j = new Jigsaw(
 ```
 
 
-#####1. html
-
-
-Grid elements are created inside the jigsaw element, you must define a class name for every different size
-
-*HTML*
+#####**1. html**
+HTML elements are created inside of the jigsaw container and every div element is assigned with a class name to identify the tile size. The example below displays two tile sizes "largeitem" and "smallitem"
 ```
+index.html
+
 <div class="jigsaw">
     <div class="item largeitem"></div>
     <div class="item smallitem"></div>
@@ -65,6 +50,7 @@ Grid elements are created inside the jigsaw element, you must define a class nam
 
 
 *javascript*
+
 ```
 var j = new Jigsaw({
 
@@ -74,22 +60,72 @@ var j = new Jigsaw({
 
             load: {
                 btn: true,
+                // then number of tiles to load at one time
                 index: 20
-            }
+            },
+            
+            tile: [
+            {
+                // this class name must match the html
+                // this tile is 2 tiles wide and 2 tiles tall
+                classname: "largeitem",
+                w: 2,
+                h: 2
+            },
+            {
+                // this class name must match the html
+                classname: "smallitem",
+                
+                // this tile is 1 unit length wide
+                w: 1,
+                
+                //1 unit length tall
+                h: 1
+           }]
         });
 ```
 
+The unit height and width of the grid can be specified by the user (e.g. width: 200px; height: 200px;). The height and width of the tile (elements) can be determined according to the specified unit lengths.
 
 
 
-#####2. page
-
-Gets elements from HTML pages and loads them into the jigsaw element
+#####**2. page**
+This is similar to the html option, but the differences is the tile elements are separated in html files and loaded in one by one 
 
 ```
+index.html
+
 <div class="jigsaw">
-    page one elements
+    <div class="item largeitem"></div>
+    <div class="item smallitem"></div>
+    <div class="item smallitem"></div>
+    <div class="item smallitem"></div>
 </div>
+```
+
+```
+page-2.html
+
+<div class="jigsaw">
+    <div class="item largeitem"></div>
+    <div class="item smallitem"></div>
+    <div class="item smallitem"></div>
+    <div class="item smallitem"></div>
+</div>
+```
+```
+page-3.html
+
+<div class="jigsaw">
+    <div class="item largeitem"></div>
+    <div class="item smallitem"></div>
+    <div class="item smallitem"></div>
+    <div class="item smallitem"></div>
+</div>
+```
+
+javascipt
+```
 
 var j = new Jigsaw({
 
@@ -97,7 +133,7 @@ var j = new Jigsaw({
             option: "page",
             url: "data/html/page-",
             pageIndex: 1,
-            pageEnd: 4
+            pageEnd: 3
         },
 
         load: {
@@ -106,20 +142,11 @@ var j = new Jigsaw({
     });
 
 ```
-html/page-2.html
-```
-<div class="item largeitem"></div>
-<div class="item smallitem"></div>
-<div class="item smallitem"></div>
-<div class="item smallitem"></div>
-<div class="item smallitem"></div>
-<div class="item largeitem"></div>
-<div class="item smallitem"></div>
-```
 
 
 
-#####3. json
+
+#####**3. json**
 
 gets JSON file and jigsaw creates HTML elemnts
 
@@ -145,26 +172,14 @@ var j = new Jigsaw({
 ```
 
 
-<!-- JSON example
-```
-    {
-        "id":"1",
-        "html": "<p>html goes here</p>",
-        "classname":"item",
-        "tile": {
-            "classname":"largeitem"
-        }
-    }
-``` -->
-
 ------------------------------
 
 
 ###tile: array
 
-specifies class names, element width and height
-
 ```
+EXAMPLE:
+
     tile: [
         {
             classname: "smallitem",
@@ -190,36 +205,49 @@ specifies class names, element width and height
 ```
 
 
-------------------------------
 
-
-###Breakpoints: array
+###**Breakpoints**
 
 ```
+
     breakpoints: [
-        {
+            {
             position: 320,
             tile: {
                 width: 120,
                 height: 120,
                 padding: 8
             }
-        },
-        {
+            },
+            {
             position: 480,
             tile: {
                 width: 160,
                 height: 130,
                 padding: 10
             }
-        },
-        {
+            },
+            {
             position: 1200,
             tile: {
                 width: 200,
                 height: 180,
                 padding: 18
             }
-        }
-    ]
+            }
+        ]
 ```
+
+
+#####**Gulp - Installation Instructions**
+-----------
+
+######**To install Gulp globally: $ npm install gulp -g**
+To install dependencies:
+- npm install
+
+
+View html pages using gulp-webserver
+- gulp webserver
+
+------

@@ -6,7 +6,7 @@ var src = "src/",
 
 // Default task
 gulp.task('copy', function() {
-    gulp.start("copy-html", "copy-css", "copy-data");
+    gulp.start("copy-html", "copy-css", "copy-data", 'copy-prism');
 });
 
 gulp.task('copy-html', function() {
@@ -22,4 +22,9 @@ gulp.task('copy-css', function() {
 gulp.task('copy-data', function() {
     return gulp.src(src + 'data/**/*')
       .pipe(gulp.dest(dest + 'data'));
+});
+
+gulp.task('copy-prism', function() {
+    return gulp.src(src + 'lib/prism.js')
+      .pipe(gulp.dest(dest + 'lib'));
 });

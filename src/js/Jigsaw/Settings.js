@@ -7,6 +7,7 @@ JGSW("Settings", function () {
 
         classnames: {
             container: ".container",
+            jigsaw: ".jigsaw",
             tiles: "item", // do not include the dot
             formElement: ".json-form",
             btnLoadMore: ".load-more"

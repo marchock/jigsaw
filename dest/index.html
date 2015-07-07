@@ -34,13 +34,43 @@
 
         var j = new Jigsaw({
 
-                    element: ".jigsaw",
+                    select: {
+                        option: "html",
+                    },
 
-                    getWidthFrom: ".container",
+                    load: {
+                        btn: false,
+                        index: 20,
+                        animate: true,
+                        framerate: 16
+                    },
 
-                    getDataFrom: "html",
-
-                    loadNumOfTiles: 20,
+                    breakpoints: [
+                        {
+                            position: 320,
+                            tile: {
+                                width: 120,
+                                height: 120,
+                                padding: 8
+                            }
+                        },
+                        {
+                            position: 480,
+                            tile: {
+                                width: 160,
+                                height: 130,
+                                padding: 10
+                            }
+                        },
+                        {
+                            position: 1200,
+                            tile: {
+                                width: 200,
+                                height: 180,
+                                padding: 18
+                            }
+                        }
+                    ],
 
                     tile: [
                         {
@@ -56,30 +86,13 @@
                         {
                             classname: "longitem",
                             w: 1,
-                            h: 3
-                        }
-                    ],
-
-                    resize: [
-                        {
-                            breakpoint: 320,
-                            tileWidth: 200,
-                            tileHeight: 120,
-                            tileSpace: 8
+                            h: 2
                         },
-                        // {
-                        //     breakpoint: 480,
-                        //     tileWidth: 150,
-                        //     tileHeight: 130,
-                        //     tileSpace: 10
-                        // },
-
-                        // {
-                        //     breakpoint: 1200,
-                        //     tileWidth: 200,
-                        //     tileHeight: 180,
-                        //     tileSpace: 18
-                        // }
+                        {
+                            classname: "wideitem",
+                            w: 2,
+                            h: 1
+                        }
                     ]
                 });
 

@@ -7,18 +7,28 @@ JGSW("ElementsController", function (s, u, e, a) {
         Events = e,
         Animation = a,
         cachedData,
-        $parent = document.querySelector(".jigsaw"),
+        $container = document.querySelector(Settings.classnames.container),
+        $parent = document.querySelector(Settings.classnames.jigsaw),
         $children = $parent.querySelectorAll("." + Settings.classnames.tiles),
-        $btnLoadMore = document.querySelector(Settings.classnames.btnLoadMore),
-        $form = document.querySelector(Settings.classnames.formElement);
+        $form = document.querySelector(Settings.classnames.formElement),
+        $btnLoadMore = document.createElement("div"),
+        t = document.createTextNode("Load More");
 
     if (Settings.load.btn) {
+
+        $btnLoadMore.appendChild(t);
+        $btnLoadMore.setAttribute("class", "load-more");
+          
         Events.loadMoreBtn($btnLoadMore, "click");
 
         if (Settings.load.animate && !Settings.load.framerate) {
             //setDefault value
             Settings.load.framerate = 16;
-        }
+        };
+
+        //$container.appendChild($btnLoadMore);
+
+        $container.parentNode.insertBefore($btnLoadMore, $container.nextSibling);
     }
 
     /*
